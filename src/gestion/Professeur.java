@@ -6,16 +6,9 @@ import app.Input;
 
 public class Professeur {
 
-    private final String TABLE =
-            "professeur(" +
-                    "nom," +
-                    "prenom," +
-                    "numero_rue," +
-                    "rue," +
-                    "code_postal," +
-                    "ville," +
-                    "telephone," +
-                    "email)";
+    private final String DEF_TABLE = "professeur(nom,prenom,numero_rue,rue,code_postal,ville,telephone,email)";
+
+    private Database database;
 
     private String nom;
     private String prenom;
@@ -26,41 +19,28 @@ public class Professeur {
     private String telephone;
     private String email;
 
+    public Professeur() {
+        this.database = new Database();
+    }
+
 
     public void query() {
-
-        System.out.println( "Veuillez saisir :" );
-
-        this.nom = Input.askString( "- Un nom > ", 2, 15 );
-        this.prenom = Input.askString( "- Un prenom > ", 2, 15 );
-        this.numero_rue = Input.askString( "- Un numero_rue > ", 2, 15 );
-        this.rue = Input.askString( "- Une rue > ", 2, 15 );
-        this.code_postal = Input.askString( "- Un code_postal > ", 2, 15 );
-        this.ville = Input.askString( "- Une ville > ", 2, 15 );
-        this.telephone = Input.askString( "- Un telephone > ", 2, 15 );
-        this.email = Input.askString( "- Un email > ", 2, 15 );
+        this.nom = Input.askString( "Saisissez le nom du professeur > ", 2, 15 );
+        this.prenom = Input.askString( "Saisissez le prenom du professeur > ", 2, 15 );
+        this.numero_rue = Input.askString( "Saisissez le numero de rue du professeur > ", 2, 15 );
+        this.rue = Input.askString( "Saisissez la rue du professeur > ", 2, 15 );
+        this.code_postal = Input.askString( "Saisissez le code postal du professeur > ", 2, 15 );
+        this.ville = Input.askString( "Saisissez la ville du professeur > ", 2, 15 );
+        this.telephone = Input.askString( "Saisissez le telephone du professeur > ", 2, 15 );
+        this.email = Input.askString( "Saisissez l'email du professeur > ", 2, 15 );
     }
 
     public void add() {
 
         this.query();
 
-        String query = "INSERT INTO " +
-                        TABLE +
-                        " VALUES " +
-                        Utils.format(
-                                this.nom,
-                                this.prenom,
-                                this.numero_rue,
-                                this.rue,
-                                this.code_postal,
-                                this.ville,
-                                this.telephone,
-                                this.email
-                        );
+        String query = Utils.add( DEF_TABLE, this.nom, this.prenom, this.numero_rue, this.rue, this.code_postal, this.ville, this.telephone, this.email );
 
-        Database database = new Database();
-
-        database.execute( query );
+        this.database.execute( query );
     }
 }

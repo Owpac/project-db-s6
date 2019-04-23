@@ -25,19 +25,23 @@ public class Cours {
     }
 
     public void query() {
-        String query = "select * from classe";
+        String query = Utils.select( "*", "classe" );
 
-        this.nom = Input.askString("Saisissez le nom du cours > ", 2, 15);
-        this.description = Input.askString("Saisissez la description du cours > ", 2, 44);
-        this.annee = Input.askString("Saisissez l'année du cours > ", 2, 15);
-        this.coefficient = Input.askString("Saisissez le coefficient du cours > ", 2, 15);
-        this.pourcentage_de = Input.askString("Saisissez le pourcentage du DE du cours > ", 2, 15);
-        this.pourcentage_tp = Input.askString("Saisissez le pourcentage du TP du cours > ", 2, 15);
-        this.pourcentage_projet = Input.askString("Saisissez le pourcentage du porjet du cours > ", 2, 15);
-        this.identifiant_classe = Utils.askQuery( "Saisissez la classe du cours > ", "Classe", this.database, query);
+        this.nom = Input.askString( "Saisissez le nom du cours > ", 2, 15 );
+        this.description = Input.askString( "Saisissez la description du cours > ", 2, 44 );
+        this.annee = Input.askString( "Saisissez l'annee du cours > ", 2, 15 );
+        this.coefficient = Input.askString( "Saisissez le coefficient du cours > ", 2, 15 );
+        this.pourcentage_de = Input.askString( "Saisissez le pourcentage du DE du cours > ", 2, 15 );
+        this.pourcentage_tp = Input.askString( "Saisissez le pourcentage du TP du cours > ", 2, 15 );
+        this.pourcentage_projet = Input.askString( "Saisissez le pourcentage du porjet du cours > ", 2, 15 );
+        this.identifiant_classe = Utils.askQuery( "Saisissez la classe du cours > ", "Classe", this.database, query );
     }
 
-    public void update() {
+    public void add() {
+        this.query();
 
+        String query = Utils.add( DEF_TABLE, this.nom, this.description, this.annee, this.coefficient, this.pourcentage_de, this.pourcentage_tp, this.pourcentage_projet, this.identifiant_classe );
+
+        this.database.execute( query );
     }
 }

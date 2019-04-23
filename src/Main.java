@@ -10,6 +10,6 @@ public class Main {
 
         Classe classe = new Classe();
 
-        classe.update();
+        classe.updateClassOfStudent();
     }
 }
