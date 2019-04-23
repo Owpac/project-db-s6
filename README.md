@@ -8,4 +8,4 @@ Little school project with MySQL, Java and JDBC.
 
 # Source
 
-- [app.Connexion Java to a MySQL database](https://stackoverflow.com/questions/2839321/connect-java-to-a-mysql-database)
+- [Connexion Java to a MySQL database](https://stackoverflow.com/questions/2839321/connect-java-to-a-mysql-database)
