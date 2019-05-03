@@ -1,7 +1,7 @@
 package gestion;
 
 import app.Database;
-import app.Utils;
+import app.Statement;
 import app.Input;
 
 public class Professeur {
@@ -39,8 +39,12 @@ public class Professeur {
 
         this.query();
 
-        String query = Utils.add( DEF_TABLE, this.nom, this.prenom, this.numero_rue, this.rue, this.code_postal, this.ville, this.telephone, this.email );
+        String query = Statement.add( DEF_TABLE, this.nom, this.prenom, this.numero_rue, this.rue, this.code_postal, this.ville, this.telephone, this.email );
 
         this.database.execute( query );
+
+        Dispense dispense = new Dispense();
+
+        dispense.add();
     }
 }

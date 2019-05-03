@@ -2,7 +2,7 @@ package gestion;
 
 import app.Database;
 import app.Input;
-import app.Utils;
+import app.Statement;
 
 public class Cours {
 
@@ -25,7 +25,7 @@ public class Cours {
     }
 
     public void query() {
-        String query = Utils.select( "*", "classe" );
+        String query = Statement.select( "classe" );
 
         this.nom = Input.askString( "Saisissez le nom du cours > ", 2, 15 );
         this.description = Input.askString( "Saisissez la description du cours > ", 2, 44 );
@@ -34,14 +34,18 @@ public class Cours {
         this.pourcentage_de = Input.askString( "Saisissez le pourcentage du DE du cours > ", 2, 15 );
         this.pourcentage_tp = Input.askString( "Saisissez le pourcentage du TP du cours > ", 2, 15 );
         this.pourcentage_projet = Input.askString( "Saisissez le pourcentage du porjet du cours > ", 2, 15 );
-        this.identifiant_classe = Utils.askQuery( "Saisissez la classe du cours > ", "Classe", this.database, query );
+        this.identifiant_classe = Statement.askQuery( this.database, "Groupe", "Saisissez la classe du cours > " );
     }
 
     public void add() {
         this.query();
 
-        String query = Utils.add( DEF_TABLE, this.nom, this.description, this.annee, this.coefficient, this.pourcentage_de, this.pourcentage_tp, this.pourcentage_projet, this.identifiant_classe );
+        String query = Statement.add( DEF_TABLE, this.nom, this.description, this.annee, this.coefficient, this.pourcentage_de, this.pourcentage_tp, this.pourcentage_projet, this.identifiant_classe );
 
         this.database.execute( query );
+    }
+
+    public void teacher() {
+
     }
 }

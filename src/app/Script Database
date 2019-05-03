@@ -1,0 +1,116 @@
+create table professeur
+(
+    matricule   int auto_increment
+        primary key,
+    nom         varchar(50) not null,
+    prenom      varchar(50) not null,
+    numero_rue  varchar(50) not null,
+    rue         varchar(50) not null,
+    code_postal varchar(50) not null,
+    ville       varchar(50) not null,
+    telephone   varchar(50) not null,
+    email       varchar(50) not null
+);
+
+create table promotion
+(
+    identifiant varchar(50) not null
+        primary key
+);
+
+create table groupe
+(
+    identifiant           varchar(50) not null
+        primary key,
+    identifiant_promotion varchar(50) not null,
+    constraint Classe_Promotion_FK
+        foreign key (identifiant_promotion) references promotion (identifiant)
+);
+
+create table cours
+(
+    code               int auto_increment
+        primary key,
+    nom                varchar(50)  not null,
+    description        varchar(500) not null,
+    annee              year         not null,
+    coefficient        float        not null,
+    pourcentage_de     float        not null,
+    pourcentage_tp     float        not null,
+    pourcentage_projet float        not null,
+    identifiant_classe varchar(50)  not null,
+    constraint Cours_Classe_FK
+        foreign key (identifiant_classe) references groupe (identifiant)
+);
+
+create table dispense
+(
+    matricule_professeur int not null,
+    code_cours           int not null,
+    primary key (matricule_professeur, code_cours),
+    constraint Dispense_Cours0_FK
+        foreign key (code_cours) references cours (code),
+    constraint Dispense_Professeur_FK
+        foreign key (matricule_professeur) references professeur (matricule)
+);
+
+create table responsable
+(
+    numero      int auto_increment
+        primary key,
+    nom         varchar(50) not null,
+    prenom      varchar(50) not null,
+    numero_rue  varchar(50) not null,
+    rue         varchar(50) not null,
+    code_postal varchar(50) not null,
+    ville       varchar(50) not null,
+    telephone   varchar(50) not null,
+    email       varchar(50) not null
+);
+
+create table eleve
+(
+    matricule          varchar(50) not null
+        primary key,
+    nom                varchar(50) not null,
+    prenom             varchar(50) not null,
+    date_naissance     date        not null,
+    ville_naissance    varchar(50) not null,
+    pays_naissance     varchar(50) not null,
+    sexe               varchar(50) not null,
+    photo              blob        not null,
+    numero_rue         varchar(50) not null,
+    rue                varchar(50) not null,
+    code_postal        varchar(50) not null,
+    ville              varchar(50) not null,
+    telephone          varchar(50) not null,
+    email              varchar(50) not null,
+    identifiant_groupe varchar(50) not null,
+    numero_responsable int         not null,
+    constraint Eleve_Classe_FK
+        foreign key (identifiant_groupe) references groupe (identifiant),
+    constraint Eleve_Responsable0_FK
+        foreign key (numero_responsable) references responsable (numero)
+);
+
+create table epreuve
+(
+    identifiant     varchar(50) not null
+        primary key,
+    type            varchar(50) not null,
+    note            int         not null,
+    matricule_eleve varchar(50) not null,
+    constraint Epreuve_Eleve_FK
+        foreign key (matricule_eleve) references eleve (matricule)
+);
+
+create table possede
+(
+    identifiant_epreuve varchar(50) not null,
+    code_cours          int         not null,
+    primary key (identifiant_epreuve, code_cours),
+    constraint Possede_Cours0_FK
+        foreign key (code_cours) references cours (code),
+    constraint Possede_Epreuve_FK
+        foreign key (identifiant_epreuve) references epreuve (identifiant)
+);

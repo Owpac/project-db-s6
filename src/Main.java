@@ -1,15 +1,11 @@
 import app.Database;
-import app.Utils;
-import gestion.Classe;
-import gestion.Cours;
-import gestion.Professeur;
+import app.Menu;
+import app.Statement;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        Classe classe = new Classe();
-
-        classe.updateClassOfStudent();
+        Menu menu = new Menu();
     }
 }
