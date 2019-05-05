@@ -60,7 +60,7 @@ public class Cours {
     }
 
     private static void setIdentifiant_groupe() {
-        identifiant_groupe = Statement.askQuery( database, "groupe", "Saisissez la classe du cours > " );
+        identifiant_groupe = Statement.askQuery( "groupe", "Saisissez la classe du cours > " );
     }
 
     private static void query() {
@@ -93,7 +93,7 @@ public class Cours {
     }
 
     public static void update() {
-        String id = Statement.askQuery( database, "cours", "Choisissez un cours a modifier > ", NBR_COLUMNS_COURS );
+        String id = Statement.askQuery( "cours", "Choisissez un cours a modifier > ", NBR_COLUMNS_COURS );
         System.out.println();
         System.out.println( "0) Annuler." );
         System.out.println( "1) Nom du cours." );
@@ -114,53 +114,53 @@ public class Cours {
 
             case 1:
                 setNom();
-                database.execute( Statement.update( "cours", "nom", nom, "code", id ) );
+                database.execute( Statement.update( "cours", 1, "nom", nom, "code", id ) );
                 break;
 
             case 2:
                 setDescription();
-                database.execute( Statement.update( "cours", "description", description, "code", id ) );
+                database.execute( Statement.update( "cours", 1, "description", description, "code", id ) );
                 break;
 
             case 3:
                 setAnnee();
-                database.execute( Statement.update( "cours", "annee", String.valueOf( annee ), "code", id ) );
+                database.execute( Statement.update( "cours", 1, "annee", annee, "code", id ) );
                 break;
 
             case 4:
                 setCoefficient();
-                database.execute( Statement.update( "cours", "coefficient", String.valueOf( coefficient ), "code", id ) );
+                database.execute( Statement.update( "cours", 1, "coefficient", coefficient, "code", id ) );
                 break;
 
             case 5:
                 setPourcentage_de();
-                database.execute( Statement.update( "cours", "pourcentage_de", String.valueOf( pourcentage_de ), "code", id ) );
+                database.execute( Statement.update( "cours", 1, "pourcentage_de", pourcentage_de, "code", id ) );
                 break;
 
             case 6:
                 setPourcentage_tp();
-                database.execute( Statement.update( "cours", "pourcentage_tp", String.valueOf( pourcentage_tp ), "code", id ) );
+                database.execute( Statement.update( "cours", 1, "pourcentage_tp", pourcentage_tp, "code", id ) );
                 break;
 
             case 7:
                 setPourcentage_projet();
-                database.execute( Statement.update( "cours", "pourcentage_projet", String.valueOf( pourcentage_projet ), "code", id ) );
+                database.execute( Statement.update( "cours", 1, "pourcentage_projet", pourcentage_projet, "code", id ) );
                 break;
 
             case 8:
                 setIdentifiant_groupe();
-                database.execute( Statement.update( "cours", "identifiant_groupe", identifiant_groupe, "code", id ) );
+                database.execute( Statement.update( "cours", 1, "identifiant_groupe", identifiant_groupe, "code", id ) );
                 break;
 
             case 9:
                 query();
-                database.execute( Statement.update( "cours", 8,"nom", nom, "description", description, "annee", String.valueOf( annee ), "coefficient", String.valueOf( coefficient ), "pourcentage_de", String.valueOf( pourcentage_de ), "pourcentage_tp", String.valueOf( pourcentage_tp ), "pourcentage_projet", String.valueOf( pourcentage_projet ), "identifiant_groupe", identifiant_groupe, "code", id ) );
+                database.execute( Statement.update( "cours", 8, "nom", nom, "description", description, "annee", annee, "coefficient", coefficient, "pourcentage_de", pourcentage_de, "pourcentage_tp", pourcentage_tp, "pourcentage_projet", pourcentage_projet, "identifiant_groupe", identifiant_groupe, "code", id ) );
                 break;
         }
     }
 
     public static void remove() {
-        String id = Statement.askQuery( database, "cours", "Choisissez un cours a supprimer > ", NBR_COLUMNS_DISPENSE );
+        String id = Statement.askQuery( "cours", "Choisissez un cours a supprimer > ", NBR_COLUMNS_DISPENSE );
         String query = Statement.remove( "cours", "code", id );
         database.execute( query );
     }

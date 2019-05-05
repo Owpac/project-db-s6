@@ -5,6 +5,7 @@ import app.Statement;
 import app.Input;
 
 import static app.Constants.DEF_TABLE_PROFESSEUR;
+import static app.Constants.NBR_COLUMNS_PROFESSEUR;
 
 public class Professeur {
     private static Database database;
@@ -58,7 +59,7 @@ public class Professeur {
         email = Input.askString( "Saisissez l'email du professeur > ", 2, 15 );
     }
 
-    private void query() {
+    private static void query() {
         setNom();
         setPrenom();
         setNumero_rue();
@@ -69,10 +70,77 @@ public class Professeur {
         setEmail();
     }
 
-    public void add() {
+    public static void add() {
         query();
         String query = Statement.add( DEF_TABLE_PROFESSEUR, nom, prenom, numero_rue, rue, code_postal, ville, telephone, email );
         database.execute( query );
-        Dispense.add();
+    }
+
+    public static void update() {
+        String id = Statement.askQuery( "professeur", "Choisissez le professeur a modifier > ", NBR_COLUMNS_PROFESSEUR );
+        System.out.println();
+        System.out.println( "0) Annuler." );
+        System.out.println( "1) Nom du professeur." );
+        System.out.println( "2) Prenom du professeur." );
+        System.out.println( "3) Numero de rue du professeur." );
+        System.out.println( "4) Rue du professeur." );
+        System.out.println( "5) Code postal du professeur." );
+        System.out.println( "6) Ville du professeur." );
+        System.out.println( "7) Telephone du professeur." );
+        System.out.println( "8) Email du professeur." );
+        System.out.println( "9) Tout." );
+        int answer = Input.askInt( "Que voulez-vous modifier > ", 1, 8 );
+
+        switch (answer) {
+            case 1:
+                setNom();
+                database.execute( Statement.update( "professeur", 1, "nom", nom, "matricule", id ) );
+                break;
+
+            case 2:
+                setPrenom();
+                database.execute( Statement.update( "professeur", 1, "prenom", prenom, "matricule", id ) );
+                break;
+
+            case 3:
+                setNumero_rue();
+                database.execute( Statement.update( "professeur", 1, "numero_rue", numero_rue, "matricule", id ) );
+                break;
+
+            case 4:
+                setRue();
+                database.execute( Statement.update( "professeur", 1, "rue", rue, "matricule", id ) );
+                break;
+
+            case 5:
+                setCode_postal();
+                database.execute( Statement.update( "professeur", 1, "code_postal", code_postal, "matricule", id ) );
+                break;
+
+            case 6:
+                setVille();
+                database.execute( Statement.update( "professeur", 1, "ville", ville, "matricule", id ) );
+                break;
+
+            case 7:
+                setTelephone();
+                database.execute( Statement.update( "professeur", 1, "telephone", telephone, "matricule", id ) );
+                break;
+
+            case 8:
+                setEmail();
+                database.execute( Statement.update( "professeur", 1, "email", email, "matricule", id ) );
+                break;
+
+            case 9:
+                query();
+                database.execute( Statement.update( "professeur", 8, "nom", nom, "prenom", prenom, "numero_rue", numero_rue, "rue", rue, "code_postal", code_postal, "ville", ville, "telephone", telephone, "email", email, "matricule", id ) );
+        }
+    }
+
+    public static void remove() {
+        String id = Statement.askQuery( "professeur", "Choisissez un professeur a supprimer > ", NBR_COLUMNS_PROFESSEUR );
+        String query = Statement.remove( "professeur", "matricule", id );
+        database.execute( query );
     }
 }

@@ -27,7 +27,7 @@ public class Groupe {
     }
 
     private static void setIdentifiant_promotion() {
-        identifiant_promotion = Statement.askQuery( database, "promotion", "Choisissez la promotion de votre groupe > " );
+        identifiant_promotion = Statement.askQuery( "promotion", "Choisissez la promotion de votre groupe > " );
     }
 
     private static void query() {
@@ -43,7 +43,7 @@ public class Groupe {
     }
 
     public static void update() {
-        String id = Statement.askQuery( database, "groupe", "Choisissez un groupe a modifier > ", NBR_COLUMNS_GROUPE );
+        String id = Statement.askQuery( "groupe", "Choisissez un groupe a modifier > ", NBR_COLUMNS_GROUPE );
         System.out.println();
         System.out.println( "1) Identifiant du groupe." );
         System.out.println( "2) Promotion du groupe." );
@@ -53,27 +53,32 @@ public class Groupe {
         switch (answer) {
             case 1:
                 setIdentifiant();
-                database.execute( Statement.update( "groupe", "identifiant", identifiant, "identifiant", id ) );
+                database.execute( Statement.update( "groupe", 1, "identifiant", identifiant, "identifiant", id ) );
                 break;
+
             case 2:
                 setIdentifiant_promotion();
-                database.execute( Statement.update( "groupe", "identifiant_promotion", identifiant_promotion, "identifiant", id ) );
+                database.execute( Statement.update( "groupe", 1, "identifiant_promotion", identifiant_promotion, "identifiant", id ) );
                 break;
+
+            case 3:
+                query();
+                database.execute( Statement.update( "groupe", 2, "identifiant", identifiant, "identifiant_promotion", identifiant_promotion, "identifiant", id ) );
         }
     }
 
     public static void remove() {
-        String id = Statement.askQuery( database, "groupe", "Choisissez un groupe a supprimer > ", NBR_COLUMNS_GROUPE );
+        String id = Statement.askQuery( "groupe", "Choisissez un groupe a supprimer > ", NBR_COLUMNS_GROUPE );
         String query = Statement.remove( "groupe", "identifiant", id );
         database.execute( query );
     }
 
     public static void updateGroupOfStudent() {
-        String group = Statement.askQuery( database, "groupe", "Choisissez un groupe > " );
+        String group = Statement.askQuery( "groupe", "Choisissez un groupe > " );
 
         String query = Statement.select( "eleve", "identifiant_groupe", "!=", group );
-        String student = Statement.askQuery( database, query, "eleve", "Choisissez un eleve a ajouter au groupe \"" + group + "\" > ", NBR_COLUMNS_MIN );
+        String student = Statement.askQuery( query, "eleve", "Choisissez un eleve a ajouter au groupe \"" + group + "\" > ", NBR_COLUMNS_MIN );
 
-        database.execute( Statement.update( "eleve", "identifiant_groupe", group, "matricule", student ) );
+        database.execute( Statement.update( "eleve", 1, "identifiant_groupe", group, "matricule", student ) );
     }
 }

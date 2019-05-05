@@ -5,8 +5,7 @@ import gestion.Dispense;
 import gestion.Groupe;
 import gestion.Professeur;
 
-import static app.Constants.NBR_COLUMNS_COURS;
-import static app.Constants.NBR_COLUMNS_GROUPE;
+import static app.Constants.*;
 
 public class Menu {
 
@@ -15,6 +14,7 @@ public class Menu {
     public Menu() {
         database = new Database();
 
+        new Statement( database );
         new Groupe( database );
         new Cours( database );
         new Dispense( database );
@@ -59,7 +59,8 @@ public class Menu {
         System.out.println( "0) Quitter." );
         System.out.println( "1) Gestion des groupes." );
         System.out.println( "2) Gestion des cours." );
-        int answer = Input.askInt( "Action > ", 0, 2 );
+        System.out.println( "3) Gestion des professeurs." );
+        int answer = Input.askInt( "Action > ", 0, 3 );
 
         switch (answer) {
             case 0:
@@ -72,12 +73,16 @@ public class Menu {
             case 2:
                 manageClass();
                 break;
+
+            case 3:
+                manageProfessor();
+                break;
         }
     }
 
     public void manageGroup() {
         do {
-            Statement.printQuery( database, "groupe", NBR_COLUMNS_GROUPE );
+            Statement.printQuery( "groupe", NBR_COLUMNS_GROUPE );
 
             System.out.println( "0) Quitter." );
             System.out.println( "1) Ajouter un groupe." );
@@ -122,13 +127,13 @@ public class Menu {
 
     public void manageClass() {
         do {
-            Statement.printQuery( database, "cours", NBR_COLUMNS_COURS );
+            Statement.printQuery( "cours", NBR_COLUMNS_COURS );
 
             System.out.println( "0) Quitter." );
             System.out.println( "1) Ajouter un cours." );
             System.out.println( "2) Modifer un cours." );
             System.out.println( "3) Supprimer un cours." );
-            System.out.println( "4) Ajouter un eleve a un groupe." );
+            System.out.println( "4) " );
             int answer = Input.askInt( "Que voulez-vous faire > ", 0, 4 );
 
             switch (answer) {
@@ -165,6 +170,43 @@ public class Menu {
         } while (!isOk( "Quitter la gestion des groupes ? (oui/non)" ));
     }
 
+    public void manageProfessor() {
+        do {
+            Statement.printQuery( "professeur", NBR_COLUMNS_PROFESSEUR );
+
+            System.out.println( "0) Quitter." );
+            System.out.println( "1) Ajouter un professeur." );
+            System.out.println( "2) Modifer un professeur." );
+            System.out.println( "3) Supprimer un professeur." );
+            int answer = Input.askInt( "Que voulez-vous faire > ", 0, 3 );
+
+            switch (answer) {
+                case 0:
+                    break;
+
+                case 1:
+                    do {
+                        Professeur.add();
+                    } while (isOk( "Voulez-vous ajouter un autre professeur ? (oui/non)" ));
+                    break;
+
+                case 2:
+                    do {
+                        Professeur.update();
+                    } while (isOk( "Voulez-vous modifier un autre professeur ? (oui/non)" ));
+                    break;
+
+                case 3:
+                    do {
+                        Professeur.remove();
+                    } while (isOk( "Voulez-vous supprimer un autre professeur ? (oui/non)" ));
+                    break;
+
+                default:
+                    System.out.println( "Votre reponse ne correspond pas aux choix disponibles." );
+            }
+        } while (!isOk( "Quitter la gestion des groupes ? (oui/non)" ));
+    }
 
     public boolean isOk(String message) {
         String isOk;

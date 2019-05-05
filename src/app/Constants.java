@@ -21,6 +21,7 @@ public final class Constants {
             NBR_COLUMNS_MIN = 3,
             NBR_COLUMNS_GROUPE = 2,
             NBR_COLUMNS_ELEVE = 16,
+            NBR_COLUMNS_PROFESSEUR = 9,
             NBR_COLUMNS_COURS = 9,
             NBR_COLUMNS_DISPENSE = 2;
 }

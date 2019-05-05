@@ -23,11 +23,11 @@ public class Dispense {
     }
 
     private static void setMatricule_professeur() {
-        matricule_professeur = Statement.askQuery( database, "professeur", "Saisissez le professeur responsable du cours > ", NBR_COLUMNS_MIN );
+        matricule_professeur = Statement.askQuery( "professeur", "Saisissez le professeur responsable du cours > ", NBR_COLUMNS_MIN );
     }
 
     private static void setCode_cours() {
-        code_cours = Statement.askQuery( database, "cours", "Saisissez un cours > ", NBR_COLUMNS_MIN );
+        code_cours = Statement.askQuery( "cours", "Saisissez un cours > ", NBR_COLUMNS_MIN );
     }
 
     private static void query() {
@@ -48,27 +48,34 @@ public class Dispense {
     }
 
     public static void update() {
-        ArrayList<String> id = Statement.askQueries( database, "dispense", "Choisissez la dispense a modifier > ", NBR_COLUMNS_DISPENSE );
+        Statement.printQuery( "professeur", NBR_COLUMNS_PROFESSEUR );
+        Statement.printQuery( "cours", NBR_COLUMNS_COURS );
+        ArrayList<String> id = Statement.askQueries( "dispense", "Choisissez l'enseignement a modifier > ", NBR_COLUMNS_DISPENSE );
         System.out.println();
         System.out.println( "1) Professeur en charge du cours." );
-        System.out.println( "2) Cours." );
+        System.out.println( "2) Cours a enseigner." );
         int answer = Input.askInt( "Que voulez-vous modifier > ", 1, 2 );
 
         switch (answer) {
             case 1:
                 setMatricule_professeur();
-                database.execute( Statement.update( "dispense", "matricule_professeur", matricule_professeur, "matricule_professeur", id.get( 0 ), "code_cours", id.get( 1 ) ) );
+                database.execute( Statement.update( "dispense", 1, "matricule_professeur", matricule_professeur, "matricule_professeur", id.get( 0 ), "code_cours", id.get( 1 ) ) );
                 break;
+
             case 2:
                 setCode_cours();
-                database.execute( Statement.update( "dispense", "code_cours", code_cours, "matricule_professeur", id.get( 0 ), "code_cours", id.get( 1 ) ) );
+                database.execute( Statement.update( "dispense", 1, "code_cours", code_cours, "matricule_professeur", id.get( 0 ), "code_cours", id.get( 1 ) ) );
                 break;
+
+            case 3:
+                query();
+                database.execute( Statement.update( "dispense", 2, "matricule_professeur", matricule_professeur, "code_cours", code_cours, "matricule_professeur", id.get( 0 ), "code_cours", id.get( 1 ) ) );
         }
     }
 
     public static void remove() {
-        String id = Statement.askQuery( database, "dispense", "Choisissez le professeur a retirer du cours > ", NBR_COLUMNS_MIN );
-        String query = Statement.remove( "dispense", "matricule_professeur", id );
+        ArrayList<String> id = Statement.askQueries( "dispense", "Choisissez l'enseignement a retirer > ", NBR_COLUMNS_MIN );
+        String query = Statement.remove( "dispense", "matricule_professeur", id.get( 0 ), "code_cours", id.get( 0 ) );
         database.execute( query );
     }
 }
