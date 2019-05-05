@@ -47,6 +47,53 @@ public class Statement {
         return String.format( "insert into %s values %s", definitionTable, Statement.format( elements ) );
     }
 
+    public static String update(String table, String updateColumn, String updateValue, Object... elements) {
+        StringBuilder query = new StringBuilder( String.format( "update %s set %s='%s' where ", table, updateColumn, updateValue ) );
+
+        for (int i = 0; i < elements.length; i++) {
+            Object element = elements[i];
+
+            if (i % 2 == 0) {
+                query.append( element );
+                query.append( "=" );
+                query.append( "'" );
+            } else {
+                query.append( element );
+                query.append( "'" );
+
+                if (i != elements.length - 1) {
+                    query.append( " and " );
+                }
+            }
+        }
+        return query.toString();
+    }
+
+    public static String update(String table, int nbrUpdate, Object... elements) {
+        StringBuilder query = new StringBuilder( String.format( "update %s set ", table ) );
+
+        for (int i = 0; i < elements.length; i++) {
+            Object element = elements[i];
+
+            if (i % 2 == 0) {
+                query.append( element );
+                query.append( "=" );
+                query.append( "'" );
+            } else {
+                query.append( element );
+                query.append( "'" );
+
+                if (i < nbrUpdate * 2) {
+                    query.append( ", " );
+                } else if (i != elements.length - 1) {
+                    query.append( " and " );
+                }
+            }
+        }
+
+        return query.toString();
+    }
+
     public static String update(String table, String updateColumn, String updateValue, String conditionColumn, String operation, String conditionValue) {
         return String.format( "update %s set %s='%s' where %s%s'%s'", table, updateColumn, updateValue, conditionColumn, operation, conditionValue );
     }
@@ -140,5 +187,48 @@ public class Statement {
     public static String askQuery(Database database, String table, String message) {
 
         return askQuery( database, select( table ), table, message, NBR_COLUMNS_DEFAULT );
+    }
+
+    public static ArrayList<String> askQueries(Database database, String query, String table, String message, int nbrColumns) {
+
+        int indexLine = 0;
+        int nbrLines = 0;
+        ArrayList<ArrayList<String>> valueLines = new ArrayList<>();
+
+        try (java.sql.Statement statement = database.getConnexion().createStatement()) {
+
+            ResultSet result = statement.executeQuery( query );
+
+            printQuery( database, query, table, nbrColumns );
+
+            while (result.next()) {
+                nbrLines++;
+                ArrayList<String> valueColumns = new ArrayList<>();
+
+                for (int i = 0; i < nbrColumns; i++) {
+                    String currentValue = result.getString( i + 1 );
+                    valueColumns.add( currentValue );
+                }
+
+                valueLines.add( valueColumns );
+            }
+
+            indexLine = Input.askInt( message, 1, nbrLines );
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return valueLines.get( indexLine - 1 );
+    }
+
+    public static ArrayList<String> askQueries(Database database, String table, String message, int nbrColumns) {
+
+        return askQueries( database, select( table ), table, message, nbrColumns );
+    }
+
+    public static ArrayList<String> askQueries(Database database, String table, String message) {
+
+        return askQueries( database, select( table ), table, message, NBR_COLUMNS_DEFAULT );
     }
 }

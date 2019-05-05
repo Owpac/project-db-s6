@@ -1,49 +1,49 @@
 package gestion;
 
-import app.Constants;
 import app.Database;
 import app.Statement;
 import app.Input;
 
-import static app.Constants.NBR_COLUMNS_ELEVE_MIN;
+import static app.Constants.*;
 
 
 public class Groupe {
-    private final String DEF_TABLE = "groupe(identifiant,identifiant_promotion)";
 
-    private Database database;
+    private static Database database;
 
-    private String identifiant;
-    private String identifiant_promotion;
+    private static String identifiant;
+    private static String identifiant_promotion;
 
     public Groupe() {
-        this.database = new Database();
+        database = new Database();
     }
 
-    public void setIdentifiant() {
-        this.identifiant = Input.askString( "Saisissez le nom de votre groupe > ", 2, 15 );
+    public Groupe(Database database) {
+        Groupe.database = database;
     }
 
-    public void setIdentifiant_promotion() {
-        this.identifiant_promotion = Statement.askQuery( this.database, "promotion", "Choisissez la promotion de votre groupe > " );
+    private static void setIdentifiant() {
+        identifiant = Input.askString( "Saisissez le nom de votre groupe > ", 2, 15 );
     }
 
-    public void query() {
-        this.setIdentifiant();
-        this.setIdentifiant_promotion();
+    private static void setIdentifiant_promotion() {
+        identifiant_promotion = Statement.askQuery( database, "promotion", "Choisissez la promotion de votre groupe > " );
     }
 
-    public void add() {
+    private static void query() {
+        setIdentifiant();
+        setIdentifiant_promotion();
+    }
+
+    public static void add() {
         System.out.println();
-
-        this.query();
-
-        String query = Statement.add( DEF_TABLE, this.identifiant, this.identifiant_promotion );
-
-        this.database.execute( query );
+        query();
+        String query = Statement.add( DEF_TABLE_GROUPE, identifiant, identifiant_promotion );
+        database.execute( query );
     }
 
-    public void update(String id) {
+    public static void update() {
+        String id = Statement.askQuery( database, "groupe", "Choisissez un groupe a modifier > ", NBR_COLUMNS_GROUPE );
         System.out.println();
         System.out.println( "1) Identifiant du groupe." );
         System.out.println( "2) Promotion du groupe." );
@@ -52,28 +52,28 @@ public class Groupe {
 
         switch (answer) {
             case 1:
-                this.setIdentifiant();
-                this.database.execute( Statement.update( "groupe", "identifiant", this.identifiant, "identifiant", id ) );
+                setIdentifiant();
+                database.execute( Statement.update( "groupe", "identifiant", identifiant, "identifiant", id ) );
                 break;
             case 2:
-                this.setIdentifiant_promotion();
-                this.database.execute( Statement.update( "groupe", "identifiant_promotion", this.identifiant_promotion, "identifiant", id ) );
+                setIdentifiant_promotion();
+                database.execute( Statement.update( "groupe", "identifiant_promotion", identifiant_promotion, "identifiant", id ) );
                 break;
         }
     }
 
-    public void remove(String id) {
+    public static void remove() {
+        String id = Statement.askQuery( database, "groupe", "Choisissez un groupe a supprimer > ", NBR_COLUMNS_GROUPE );
         String query = Statement.remove( "groupe", "identifiant", id );
-
-        this.database.execute( query );
+        database.execute( query );
     }
 
-    public void updateGroupOfStudent() {
-        String group = Statement.askQuery( this.database, "groupe", "Choisissez un groupe > " );
+    public static void updateGroupOfStudent() {
+        String group = Statement.askQuery( database, "groupe", "Choisissez un groupe > " );
 
         String query = Statement.select( "eleve", "identifiant_groupe", "!=", group );
-        String student = Statement.askQuery( this.database, query, "eleve", "Choisissez un eleve a ajouter au groupe \"" + group + "\" > ", NBR_COLUMNS_ELEVE_MIN );
+        String student = Statement.askQuery( database, query, "eleve", "Choisissez un eleve a ajouter au groupe \"" + group + "\" > ", NBR_COLUMNS_MIN );
 
-        this.database.execute( Statement.update( "eleve", "identifiant_groupe", group, "matricule", student ) );
+        database.execute( Statement.update( "eleve", "identifiant_groupe", group, "matricule", student ) );
     }
 }

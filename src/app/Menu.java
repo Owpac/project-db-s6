@@ -1,19 +1,28 @@
 package app;
 
+import gestion.Cours;
+import gestion.Dispense;
 import gestion.Groupe;
+import gestion.Professeur;
 
+import static app.Constants.NBR_COLUMNS_COURS;
 import static app.Constants.NBR_COLUMNS_GROUPE;
 
 public class Menu {
 
-    private Database database;
+    private static Database database;
 
     public Menu() {
-        this.database = new Database();
+        database = new Database();
+
+        new Groupe( database );
+        new Cours( database );
+        new Dispense( database );
+        new Professeur( database );
 
         do {
             login();
-        } while (isOk( "Voulez-vous continuer ? (oui/non)" ));
+        } while (!isOk( "Quitter le programme ? (oui/non)" ));
     }
 
     public void login() {
@@ -30,7 +39,7 @@ public class Menu {
                 break;
 
             case 1:
-                administrateur();
+                administrator();
                 break;
 
             case 2:
@@ -45,10 +54,11 @@ public class Menu {
         }
     }
 
-    public void administrateur() {
+    public void administrator() {
         System.out.println();
-        System.out.println( "0) Retour." );
+        System.out.println( "0) Quitter." );
         System.out.println( "1) Gestion des groupes." );
+        System.out.println( "2) Gestion des cours." );
         int answer = Input.askInt( "Action > ", 0, 2 );
 
         switch (answer) {
@@ -60,52 +70,101 @@ public class Menu {
                 break;
 
             case 2:
-                System.out.println( "OK" );
+                manageClass();
                 break;
         }
     }
 
     public void manageGroup() {
+        do {
+            Statement.printQuery( database, "groupe", NBR_COLUMNS_GROUPE );
 
-        Groupe group = new Groupe();
-        String id;
+            System.out.println( "0) Quitter." );
+            System.out.println( "1) Ajouter un groupe." );
+            System.out.println( "2) Modifer un groupe." );
+            System.out.println( "3) Supprimer un groupe." );
+            System.out.println( "4) Ajouter un eleve a un groupe." );
+            int answer = Input.askInt( "Que voulez-vous faire > ", 0, 4 );
 
-        Statement.printQuery( this.database, "groupe", NBR_COLUMNS_GROUPE );
+            switch (answer) {
+                case 0:
+                    break;
 
-        System.out.println( "0) Retour." );
-        System.out.println( "1) Ajouter un groupe." );
-        System.out.println( "2) Modifer un groupe." );
-        System.out.println( "3) Supprimer un groupe." );
-        int answer = Input.askInt( "Que voulez-vous faire > ", 0, 3 );
+                case 1:
+                    do {
+                        Groupe.add();
+                    } while (isOk( "Voulez-vous ajouter un autre groupe ? (oui/non)" ));
+                    break;
 
-        switch (answer) {
-            case 0:
-                break;
+                case 2:
+                    do {
+                        Groupe.update();
+                    } while (isOk( "Voulez-vous modifier un autre groupe ? (oui/non)" ));
+                    break;
 
-            case 1:
-                do {
-                    group.add();
-                } while (isOk( "Recommencer ?" ));
-                break;
+                case 3:
+                    do {
+                        Groupe.remove();
+                    } while (isOk( "Voulez-vous supprimer un autre groupe ? (oui/non)" ));
+                    break;
 
-            case 2:
-                do {
-                    id = Statement.askQuery( this.database, "groupe", "Choisissez un groupe a modifier > ", NBR_COLUMNS_GROUPE );
-                    group.update( id );
-                } while (isOk( "Recommencer ?" ));
-                break;
+                case 4:
+                    do {
+                        Groupe.updateGroupOfStudent();
+                    } while (isOk( "Voulez-vous ajouter un autre eleve à un groupe ? (oui/non)" ));
+                    break;
 
-            case 3:
-                do {
-                    id = Statement.askQuery( this.database, "groupe", "Choisissez un groupe a supprimer > ", NBR_COLUMNS_GROUPE );
-                    group.remove( id );
-                } while (isOk( "Recommencer ?" ));
-                break;
-
-            default:
-                System.out.println( "Votre reponse ne correspond pas aux choix disponibles." );
-        }
+                default:
+                    System.out.println( "Votre reponse ne correspond pas aux choix disponibles." );
+            }
+        } while (!isOk( "Quitter la gestion des groupes ? (oui/non)" ));
     }
+
+    public void manageClass() {
+        do {
+            Statement.printQuery( database, "cours", NBR_COLUMNS_COURS );
+
+            System.out.println( "0) Quitter." );
+            System.out.println( "1) Ajouter un cours." );
+            System.out.println( "2) Modifer un cours." );
+            System.out.println( "3) Supprimer un cours." );
+            System.out.println( "4) Ajouter un eleve a un groupe." );
+            int answer = Input.askInt( "Que voulez-vous faire > ", 0, 4 );
+
+            switch (answer) {
+                case 0:
+                    break;
+
+                case 1:
+                    do {
+                        Cours.add();
+                    } while (isOk( "Voulez-vous ajouter un autre cours ? (oui/non)" ));
+                    break;
+
+                case 2:
+                    do {
+                        Cours.update();
+                    } while (isOk( "Voulez-vous modifier un autre cours ? (oui/non)" ));
+                    break;
+
+                case 3:
+                    do {
+                        Cours.remove();
+                    } while (isOk( "Voulez-vous supprimer un autre cours ? (oui/non)" ));
+                    break;
+
+                case 4:
+                    do {
+
+                    } while (isOk( "Voulez-vous ajouter un autre eleve à un groupe ? (oui/non)" ));
+                    break;
+
+                default:
+                    System.out.println( "Votre reponse ne correspond pas aux choix disponibles." );
+            }
+        } while (!isOk( "Quitter la gestion des groupes ? (oui/non)" ));
+    }
+
 
     public boolean isOk(String message) {
         String isOk;
