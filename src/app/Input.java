@@ -5,7 +5,7 @@ import java.util.Scanner;
 /**
  * Securing input for an {@code int}.
  */
-public class Input {
+public abstract class Input {
 
     /**
      * Securing input for a {@code String}.

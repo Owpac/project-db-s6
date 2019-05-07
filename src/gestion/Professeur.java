@@ -89,9 +89,12 @@ public class Professeur {
         System.out.println( "7) Telephone du professeur." );
         System.out.println( "8) Email du professeur." );
         System.out.println( "9) Tout." );
-        int answer = Input.askInt( "Que voulez-vous modifier > ", 1, 8 );
+        int answer = Input.askInt( "Que voulez-vous modifier > ", 0, 8 );
 
         switch (answer) {
+            case 0:
+                break;
+
             case 1:
                 setNom();
                 database.execute( Statement.update( "professeur", 1, "nom", nom, "matricule", id ) );

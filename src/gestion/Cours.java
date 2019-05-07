@@ -81,7 +81,7 @@ public class Cours {
 
         int id = 0;
 
-        try (java.sql.Statement statement = database.getConnexion().createStatement()) {
+        try (java.sql.Statement statement = database.getConnection().createStatement()) {
             ResultSet result = statement.executeQuery( "select LAST_INSERT_ID()" );
             result.next();
             id = result.getInt( 1 );
@@ -163,5 +163,9 @@ public class Cours {
         String id = Statement.askQuery( "cours", "Choisissez un cours a supprimer > ", NBR_COLUMNS_DISPENSE );
         String query = Statement.remove( "cours", "code", id );
         database.execute( query );
+    }
+
+    public static void updateGroup(String idClass, String idNewGroup) {
+        database.execute( Statement.update( "cours", 1, "identifiant_groupe", idNewGroup, "code", idClass) );
     }
 }

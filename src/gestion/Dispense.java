@@ -23,11 +23,19 @@ public class Dispense {
     }
 
     private static void setMatricule_professeur() {
-        matricule_professeur = Statement.askQuery( "professeur", "Saisissez le professeur responsable du cours > ", NBR_COLUMNS_MIN );
+        matricule_professeur = Statement.askQuery( "professeur", "Saisissez l'enseignant du cours > ", NBR_COLUMNS_MIN );
     }
 
     private static void setCode_cours() {
-        code_cours = Statement.askQuery( "cours", "Saisissez un cours > ", NBR_COLUMNS_MIN );
+        String queryDispense = Statement.select( "code_cours", "dispense", "matricule_professeur", "=", matricule_professeur );
+        String query = Statement.select( "*", "cours", "code", " NOT IN ", queryDispense, "()" );
+        code_cours = Statement.askQuery( query, "cours", "Saisissez un cours > ", NBR_COLUMNS_MIN );
+    }
+
+    private static void setCode_cours(String idProfesseur) {
+        String queryDispense = Statement.select( "code_cours", "dispense", "matricule_professeur", "=", idProfesseur );
+        String query = Statement.select( "*", "cours", "code", " NOT IN ", queryDispense, "()" );
+        code_cours = Statement.askQuery( query, "cours", "Saisissez un cours > ", NBR_COLUMNS_MIN );
     }
 
     private static void query() {
@@ -63,7 +71,7 @@ public class Dispense {
                 break;
 
             case 2:
-                setCode_cours();
+                setCode_cours( id.get( 0 ) );
                 database.execute( Statement.update( "dispense", 1, "code_cours", code_cours, "matricule_professeur", id.get( 0 ), "code_cours", id.get( 1 ) ) );
                 break;
 
@@ -74,8 +82,8 @@ public class Dispense {
     }
 
     public static void remove() {
-        ArrayList<String> id = Statement.askQueries( "dispense", "Choisissez l'enseignement a retirer > ", NBR_COLUMNS_MIN );
-        String query = Statement.remove( "dispense", "matricule_professeur", id.get( 0 ), "code_cours", id.get( 0 ) );
+        ArrayList<String> id = Statement.askQueries( "dispense", "Choisissez l'enseignement a supprimer > ", NBR_COLUMNS_DISPENSE );
+        String query = Statement.remove( "dispense", "matricule_professeur", id.get( 0 ), "code_cours", id.get( 1 ) );
         database.execute( query );
     }
 }

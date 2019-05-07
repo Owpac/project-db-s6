@@ -11,7 +11,7 @@ public class Main {
 
         Menu menu = new Menu();
 
-        /*String query = Statement.remove( "groupe", "identifiant", "Groupe Test" );
-        System.out.println(query);*/
+        /*String query = Statement.select( "cours", "code", " NOT IN ", "??" );
+        System.out.println( query );*/
     }
 }

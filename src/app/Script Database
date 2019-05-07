@@ -38,9 +38,9 @@ create table cours
     pourcentage_de     float        not null,
     pourcentage_tp     float        not null,
     pourcentage_projet float        not null,
-    identifiant_classe varchar(50)  not null,
+    identifiant_groupe varchar(50)  not null,
     constraint Cours_Classe_FK
-        foreign key (identifiant_classe) references groupe (identifiant)
+        foreign key (identifiant_groupe) references groupe (identifiant)
 );
 
 create table dispense
@@ -48,10 +48,12 @@ create table dispense
     matricule_professeur int not null,
     code_cours           int not null,
     primary key (matricule_professeur, code_cours),
-    constraint Dispense_Cours0_FK
-        foreign key (code_cours) references cours (code),
+    constraint Dispense_Cours_FK
+        foreign key (code_cours) references cours (code)
+            on delete cascade,
     constraint Dispense_Professeur_FK
         foreign key (matricule_professeur) references professeur (matricule)
+            on delete cascade
 );
 
 create table responsable
@@ -70,7 +72,7 @@ create table responsable
 
 create table eleve
 (
-    matricule          varchar(50) not null
+    matricule          int auto_increment
         primary key,
     nom                varchar(50) not null,
     prenom             varchar(50) not null,
@@ -78,7 +80,7 @@ create table eleve
     ville_naissance    varchar(50) not null,
     pays_naissance     varchar(50) not null,
     sexe               varchar(50) not null,
-    photo              blob        not null,
+    photo              blob        null,
     numero_rue         varchar(50) not null,
     rue                varchar(50) not null,
     code_postal        varchar(50) not null,
@@ -99,9 +101,10 @@ create table epreuve
         primary key,
     type            varchar(50) not null,
     note            int         not null,
-    matricule_eleve varchar(50) not null,
+    matricule_eleve int         not null,
     constraint Epreuve_Eleve_FK
         foreign key (matricule_eleve) references eleve (matricule)
+            on delete cascade
 );
 
 create table possede
@@ -109,8 +112,9 @@ create table possede
     identifiant_epreuve varchar(50) not null,
     code_cours          int         not null,
     primary key (identifiant_epreuve, code_cours),
-    constraint Possede_Cours0_FK
+    constraint Possede_Cours_FK
         foreign key (code_cours) references cours (code),
     constraint Possede_Epreuve_FK
         foreign key (identifiant_epreuve) references epreuve (identifiant)
+            on delete cascade
 );

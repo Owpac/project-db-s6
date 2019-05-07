@@ -45,12 +45,16 @@ public class Statement {
         return select( "*", table );
     }
 
+    public static String select(String selection, String table, String conditionColumn, String operation, String conditionValue, String separator) {
+        return String.format( "%s where %s%s%s%s%s", select( selection, table ), conditionColumn, operation, separator.substring( 0, 1 ), conditionValue, separator.substring( 1 ) );
+    }
+
     public static String select(String selection, String table, String conditionColumn, String operation, String conditionValue) {
-        return String.format( "%s where %s%s'%s'", select( selection, table ), conditionColumn, operation, conditionValue );
+        return select( selection, table, conditionColumn, operation, conditionValue, "''");
     }
 
     public static String select(String table, String conditionColumn, String operation, String conditionValue) {
-        return String.format( "%s where %s%s'%s'", select( table ), conditionColumn, operation, conditionValue );
+        return select( "*", table, conditionColumn, operation, conditionValue);
     }
 
     public static String add(String definitionTable, Object... elements) {
@@ -108,7 +112,7 @@ public class Statement {
     }
 
     public static void printQuery(String query, String table, int nbrColumns) {
-        try (java.sql.Statement statement = database.getConnexion().createStatement()) {
+        try (java.sql.Statement statement = database.getConnection().createStatement()) {
 
             int nbrLines = 0;
             String title = table.substring( 0, 1 ).toUpperCase() + table.substring( 1 );
@@ -116,7 +120,12 @@ public class Statement {
             ResultSet result = statement.executeQuery( query );
 
             System.out.println();
-            System.out.println( "Liste des " + title + "s" + " : " );
+
+            if (table.equals( "cours" )) {
+                System.out.println( "Liste des " + title + " : " );
+            } else {
+                System.out.println( "Liste des " + title + "s" + " : " );
+            }
 
             while (result.next()) {
                 nbrLines++;
@@ -154,8 +163,7 @@ public class Statement {
         int nbrLines = 0;
         ArrayList<String> valueLines = new ArrayList<>();
 
-        try (java.sql.Statement statement = database.getConnexion().createStatement()) {
-
+        try (java.sql.Statement statement = database.getConnection().createStatement()) {
             ResultSet result = statement.executeQuery( query );
 
             printQuery( query, table, nbrColumns );
@@ -188,7 +196,7 @@ public class Statement {
         int nbrLines = 0;
         ArrayList<ArrayList<String>> valueLines = new ArrayList<>();
 
-        try (java.sql.Statement statement = database.getConnexion().createStatement()) {
+        try (java.sql.Statement statement = database.getConnection().createStatement()) {
 
             ResultSet result = statement.executeQuery( query );
 

@@ -4,6 +4,9 @@ import app.Database;
 import app.Statement;
 import app.Input;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import static app.Constants.*;
 
 
@@ -36,7 +39,6 @@ public class Groupe {
     }
 
     public static void add() {
-        System.out.println();
         query();
         String query = Statement.add( DEF_TABLE_GROUPE, identifiant, identifiant_promotion );
         database.execute( query );
@@ -45,12 +47,17 @@ public class Groupe {
     public static void update() {
         String id = Statement.askQuery( "groupe", "Choisissez un groupe a modifier > ", NBR_COLUMNS_GROUPE );
         System.out.println();
+        System.out.println( "0) Annuler." );
         System.out.println( "1) Identifiant du groupe." );
         System.out.println( "2) Promotion du groupe." );
-        int answer = Input.askInt( "Que voulez-vous modifier > ", 1, 2 );
+        System.out.println( "3) Tout." );
+        int answer = Input.askInt( "Que voulez-vous modifier > ", 0, 3 );
         System.out.println();
 
         switch (answer) {
+            case 0:
+                break;
+
             case 1:
                 setIdentifiant();
                 database.execute( Statement.update( "groupe", 1, "identifiant", identifiant, "identifiant", id ) );
@@ -68,9 +75,45 @@ public class Groupe {
     }
 
     public static void remove() {
-        String id = Statement.askQuery( "groupe", "Choisissez un groupe a supprimer > ", NBR_COLUMNS_GROUPE );
-        String query = Statement.remove( "groupe", "identifiant", id );
-        database.execute( query );
+        String idGroup = Statement.askQuery( "groupe", "Choisissez un groupe a supprimer > ", NBR_COLUMNS_GROUPE );
+        String query;
+
+        for (int i = 0; i < 2; i++) {
+
+            if (i == 0) {
+                query = Statement.select( "eleve", "identifiant_groupe", "=", idGroup );
+            } else {
+                query = Statement.select( "cours", "identifiant_groupe", "=", idGroup );
+            }
+
+            try (java.sql.Statement statement = database.getConnection().createStatement()) {
+                ResultSet result = statement.executeQuery( query );
+
+                if (i == 0) {
+                    Statement.printQuery( query, "eleve", NBR_COLUMNS_MIN );
+                    query = Statement.select( "groupe", "identifiant", "!=", idGroup );
+
+                    while (result.next()) {
+                        String idStudent = result.getString( 1 );
+                        String idNewGroup = Statement.askQuery( query, "groupe", "Saisissez le nouveau groupe de l'eleve n°" + idStudent + " > ", NBR_COLUMNS_GROUPE );
+                        Eleve.updateGroup( idStudent, idNewGroup );
+                    }
+                } else {
+                    Statement.printQuery( query, "cours", NBR_COLUMNS_MIN );
+                    query = Statement.select( "groupe", "identifiant", "!=", idGroup );
+
+                    while (result.next()) {
+                        String idClass = result.getString( 1 );
+                        String idNewGroup = Statement.askQuery( query, "groupe", "Saisissez le nouveau groupe de la class n°" + idClass + " > ", NBR_COLUMNS_GROUPE );
+                        Cours.updateGroup( idClass, idNewGroup );
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        database.execute( Statement.remove( "groupe", "identifiant", idGroup ) );
     }
 
     public static void updateGroupOfStudent() {

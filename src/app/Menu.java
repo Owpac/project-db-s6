@@ -1,9 +1,6 @@
 package app;
 
-import gestion.Cours;
-import gestion.Dispense;
-import gestion.Groupe;
-import gestion.Professeur;
+import gestion.*;
 
 import static app.Constants.*;
 
@@ -19,6 +16,8 @@ public class Menu {
         new Cours( database );
         new Dispense( database );
         new Professeur( database );
+        new Eleve( database );
+        new Epreuve( database );
 
         do {
             login();
@@ -60,7 +59,9 @@ public class Menu {
         System.out.println( "1) Gestion des groupes." );
         System.out.println( "2) Gestion des cours." );
         System.out.println( "3) Gestion des professeurs." );
-        int answer = Input.askInt( "Action > ", 0, 3 );
+        System.out.println( "4) Gestion des eleves." );
+        System.out.println( "5) Gestion des professeurs d'un cours." );
+        int answer = Input.askInt( "Action > ", 0, 5 );
 
         switch (answer) {
             case 0:
@@ -77,6 +78,14 @@ public class Menu {
             case 3:
                 manageProfessor();
                 break;
+
+            case 4:
+                manageStudent();
+                break;
+
+            case 5:
+                manageProfessorOfClass();
+                break;
         }
     }
 
@@ -88,7 +97,7 @@ public class Menu {
             System.out.println( "1) Ajouter un groupe." );
             System.out.println( "2) Modifer un groupe." );
             System.out.println( "3) Supprimer un groupe." );
-            System.out.println( "4) Ajouter un eleve a un groupe." );
+            System.out.println( "4) Mise a jour des eleves d'un groupe." );
             int answer = Input.askInt( "Que voulez-vous faire > ", 0, 4 );
 
             switch (answer) {
@@ -116,7 +125,7 @@ public class Menu {
                 case 4:
                     do {
                         Groupe.updateGroupOfStudent();
-                    } while (isOk( "Voulez-vous ajouter un autre eleve à un groupe ? (oui/non)" ));
+                    } while (isOk( "Voulez-vous ajouter un autre eleve a un groupe ? (oui/non)" ));
                     break;
 
                 default:
@@ -133,8 +142,7 @@ public class Menu {
             System.out.println( "1) Ajouter un cours." );
             System.out.println( "2) Modifer un cours." );
             System.out.println( "3) Supprimer un cours." );
-            System.out.println( "4) " );
-            int answer = Input.askInt( "Que voulez-vous faire > ", 0, 4 );
+            int answer = Input.askInt( "Que voulez-vous faire > ", 0, 3 );
 
             switch (answer) {
                 case 0:
@@ -158,16 +166,10 @@ public class Menu {
                     } while (isOk( "Voulez-vous supprimer un autre cours ? (oui/non)" ));
                     break;
 
-                case 4:
-                    do {
-
-                    } while (isOk( "Voulez-vous ajouter un autre eleve à un groupe ? (oui/non)" ));
-                    break;
-
                 default:
                     System.out.println( "Votre reponse ne correspond pas aux choix disponibles." );
             }
-        } while (!isOk( "Quitter la gestion des groupes ? (oui/non)" ));
+        } while (!isOk( "Quitter la gestion des cours ? (oui/non)" ));
     }
 
     public void manageProfessor() {
@@ -205,7 +207,85 @@ public class Menu {
                 default:
                     System.out.println( "Votre reponse ne correspond pas aux choix disponibles." );
             }
-        } while (!isOk( "Quitter la gestion des groupes ? (oui/non)" ));
+        } while (!isOk( "Quitter la gestion des professeurs ? (oui/non)" ));
+    }
+
+    public void manageStudent() {
+        do {
+            Statement.printQuery( "eleve", NBR_COLUMNS_ELEVE );
+
+            System.out.println( "0) Quitter." );
+            System.out.println( "1) Ajouter un eleve." );
+            System.out.println( "2) Modifer un eleve." );
+            System.out.println( "3) Supprimer un eleve." );
+            int answer = Input.askInt( "Que voulez-vous faire > ", 0, 3 );
+
+            switch (answer) {
+                case 0:
+                    break;
+
+                case 1:
+                    do {
+                        Eleve.add();
+                    } while (isOk( "Voulez-vous ajouter un autre eleve ? (oui/non)" ));
+                    break;
+
+                case 2:
+                    do {
+                        Eleve.update();
+                    } while (isOk( "Voulez-vous modifier un autre eleve ? (oui/non)" ));
+                    break;
+
+                case 3:
+                    do {
+                        Eleve.remove();
+                    } while (isOk( "Voulez-vous supprimer un autre eleve ? (oui/non)" ));
+                    break;
+
+                default:
+                    System.out.println( "Votre reponse ne correspond pas aux choix disponibles." );
+            }
+        } while (!isOk( "Quitter la gestion des eleves ? (oui/non)" ));
+    }
+
+    public void manageProfessorOfClass() {
+        do {
+            Statement.printQuery( "professeur", NBR_COLUMNS_MIN );
+            Statement.printQuery( "cours", NBR_COLUMNS_MIN );
+            Statement.printQuery( "dispense", NBR_COLUMNS_DISPENSE );
+
+            System.out.println( "0) Quitter." );
+            System.out.println( "1) Ajouter un professeur a un cours." );
+            System.out.println( "2) Modifier le professeur d'un cours." );
+            System.out.println( "3) Supprimer le professeur d'un cours." );
+            int answer = Input.askInt( "Que voulez-vous faire > ", 0, 3 );
+
+            switch (answer) {
+                case 0:
+                    break;
+
+                case 1:
+                    do {
+                        Dispense.add();
+                    } while (isOk( "Voulez-vous ajouter un autre professeur a un cours ? (oui/non)" ));
+                    break;
+
+                case 2:
+                    do {
+                        Dispense.update();
+                    } while (isOk( "Voulez-vous modifier un autre professeur d'un cours ? (oui/non)" ));
+                    break;
+
+                case 3:
+                    do {
+                        Dispense.remove();
+                    } while (isOk( "Voulez-vous supprimer un autre professeur d'un cours ? (oui/non)" ));
+                    break;
+
+                default:
+                    System.out.println( "Votre reponse ne correspond pas aux choix disponibles." );
+            }
+        } while (!isOk( "Quitter la gestion des professeurs responsables des cours ? (oui/non)" ));
     }
 
     public boolean isOk(String message) {
