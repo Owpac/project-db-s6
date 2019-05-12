@@ -39,7 +39,7 @@ create table cours
     pourcentage_tp     float        not null,
     pourcentage_projet float        not null,
     identifiant_groupe varchar(50)  not null,
-    constraint Cours_Classe_FK
+    constraint Cours_Groupe_FK
         foreign key (identifiant_groupe) references groupe (identifiant)
 );
 
@@ -89,7 +89,7 @@ create table eleve
     email              varchar(50) not null,
     identifiant_groupe varchar(50) not null,
     numero_responsable int         not null,
-    constraint Eleve_Classe_FK
+    constraint Eleve_Groupe_FK
         foreign key (identifiant_groupe) references groupe (identifiant),
     constraint Eleve_Responsable0_FK
         foreign key (numero_responsable) references responsable (numero)
@@ -97,7 +97,7 @@ create table eleve
 
 create table epreuve
 (
-    identifiant     varchar(50) not null
+    numero          int auto_increment
         primary key,
     type            varchar(50) not null,
     note            int         not null,
@@ -109,12 +109,13 @@ create table epreuve
 
 create table possede
 (
-    identifiant_epreuve varchar(50) not null,
-    code_cours          int         not null,
-    primary key (identifiant_epreuve, code_cours),
+    numero_epreuve int not null,
+    code_cours     int not null,
+    primary key (numero_epreuve, code_cours),
     constraint Possede_Cours_FK
-        foreign key (code_cours) references cours (code),
+        foreign key (code_cours) references cours (code)
+            on delete cascade,
     constraint Possede_Epreuve_FK
-        foreign key (identifiant_epreuve) references epreuve (identifiant)
+        foreign key (numero_epreuve) references epreuve (numero)
             on delete cascade
 );

@@ -1,19 +1,20 @@
 package app;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.sql.Statement;
 
 public class Database {
 
     private Connection connection;
 
+    /**
+     * Class that create the connection to our database.
+     */
     public Database() {
 
         String url = "jdbc:mysql://den1.mysql3.gear.host:3306/projectdbs6";
         String user = "projectdbs6";
-        String password = "password!";
+        String password = Password.PASSWORD;
 
         try {
             /*Class.forName("com.mysql.jdbc.Driver");
@@ -29,6 +30,11 @@ public class Database {
         return connection;
     }
 
+    /**
+     * Execute a query.
+     *
+     * @param query Query to execute in the database.
+     */
     public void execute(String query) {
         try (Statement statement = this.connection.createStatement()) {
             statement.execute( query );

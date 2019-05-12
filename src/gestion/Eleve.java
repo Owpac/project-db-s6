@@ -4,6 +4,11 @@ import app.Database;
 import app.Input;
 import app.Statement;
 
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
 import static app.Constants.*;
 
 public class Eleve {
@@ -45,7 +50,7 @@ public class Eleve {
         int month = Input.askInt( "Saisissez le mois de naissance de l'eleve > ", 1, 12 );
         int day = Input.askInt( "Saisissez le jour de naissance de l'eleve > ", 1, 31 );
 
-        date_naissance = String.format( "%s-%s-%s", year, month, day);
+        date_naissance = String.format( "%s-%s-%s", year, month, day );
     }
 
     public static void setVille_naissance() {
@@ -85,11 +90,11 @@ public class Eleve {
     }
 
     public static void setIdentifiant_groupe() {
-        identifiant_groupe = Statement.askQuery( "groupe", "Saisissez le groupe de l'eleve > ", NBR_COLUMNS_GROUPE );
+        identifiant_groupe = Statement.askQuery( "groupe", "Saisissez le groupe de l'eleve > " );
     }
 
     public static void setNumero_responsable() {
-        numero_responsable = Statement.askQuery( "responsable", "Saisissez le responsable de l'eleve > ", NBR_COLUMNS_MIN );
+        numero_responsable = Statement.askQuery( "responsable", "Saisissez le responsable de l'eleve > " );
     }
 
     private static void query() {
@@ -111,12 +116,13 @@ public class Eleve {
 
     public static void add() {
         query();
-        String query = Statement.add( DEF_TABLE_ELEVE, nom, prenom, date_naissance, ville_naissance, pays_naissance, sexe, numero_rue, rue, code_postal, ville, telephone, email, identifiant_groupe, numero_responsable );
+        String query = Statement.add( DEF_TABLE_ELEVE, nom, prenom, date_naissance, ville_naissance, pays_naissance,
+                sexe, numero_rue, rue, code_postal, ville, telephone, email, identifiant_groupe, numero_responsable );
         database.execute( query );
     }
 
     public static void update() {
-        String id = Statement.askQuery( "eleve", "Choisissez l'eleve a modifier > ", NBR_COLUMNS_ELEVE );
+        String id = Statement.askQuery( "eleve", "Choisissez l'eleve a modifier > " );
         System.out.println();
         System.out.println( "0) Annuler." );
         System.out.println( "1) Nom de l'eleve." );
@@ -135,6 +141,7 @@ public class Eleve {
         System.out.println( "14) Le responsable de l'eleve." );
         System.out.println( "15) Tout." );
         int answer = Input.askInt( "Que voulez-vous modifier > ", 0, 15 );
+        System.out.println();
 
         switch (answer) {
             case 0:
@@ -203,27 +210,79 @@ public class Eleve {
 
             case 13:
                 setIdentifiant_groupe();
-                database.execute( Statement.update( "eleve", 1, "identifiant_groupe", identifiant_groupe, "matricule", id ) );
+                database.execute( Statement.update( "eleve", 1, "identifiant_groupe", identifiant_groupe, "matricule"
+                        , id ) );
                 break;
 
             case 14:
                 setNumero_responsable();
-                database.execute( Statement.update( "eleve", 1, "numero_responsable", numero_responsable, "matricule", id ) );
+                database.execute( Statement.update( "eleve", 1, "numero_responsable", numero_responsable, "matricule"
+                        , id ) );
                 break;
 
             case 15:
                 query();
-                database.execute( Statement.update( "eleve", 15, "nom", nom, "prenom", prenom, "date_naissance", date_naissance, "ville_naissance", ville_naissance, "pays_naissance", pays_naissance, "sexe", sexe, "numero_rue", numero_rue, "rue", rue, "code_postal", code_postal, "ville", ville, "telephone", telephone, "email", email, "identifiant_groupe", identifiant_groupe, "numero_responsable", numero_responsable, "matricule", id ) );
+                database.execute( Statement.update( "eleve", 15, "nom", nom, "prenom", prenom, "date_naissance",
+                        date_naissance, "ville_naissance", ville_naissance, "pays_naissance", pays_naissance, "sexe",
+                        sexe, "numero_rue", numero_rue, "rue", rue, "code_postal", code_postal, "ville", ville,
+                        "telephone", telephone, "email", email, "identifiant_groupe", identifiant_groupe,
+                        "numero_responsable", numero_responsable, "matricule", id ) );
+                break;
         }
     }
 
     public static void updateGroup(String idStudent, String idNewGroup) {
-        database.execute( Statement.update( "eleve", 1, "identifiant_groupe", idNewGroup, "matricule", idStudent) );
+        database.execute( Statement.update( "eleve", 1, "identifiant_groupe", idNewGroup, "matricule", idStudent ) );
     }
 
     public static void remove() {
-        String id = Statement.askQuery( "eleve", "Choisissez un eleve a supprimer > ", NBR_COLUMNS_ELEVE );
+        String id = Statement.askQuery( "eleve", "Choisissez un eleve a supprimer > " );
         String query = Statement.remove( "eleve", "matricule", id );
         database.execute( query );
+    }
+
+    public static void printGrades() {
+        String id = Statement.askQuery( "eleve", "Choisissez un eleve > " );
+        printGrades( id );
+    }
+
+    public static void printGrades(String id) {
+        String query = Statement.select( "epreuve" ) + Statement.where( EQUAL, QUOTE, "matricule_eleve", id );
+        Statement.printQuery( query, "note" );
+    }
+
+/*    public static void saveGrades(String idStudent) {
+        String save = Input.askString("Choisissez le nom de votre fichier : ", 1, 15);
+        save += ".pdf";
+
+        try {
+
+            String query =
+
+            FileWriter fw = new FileWriter(save);
+
+            fw.write("Bulletin de l'élève n°" + idStudent + " :\n");
+            fw.write(  );
+            fw.close();
+
+        } catch (IOException ioex) {
+
+            ioex.printStackTrace();
+
+        }
+    }*/
+
+    public static void findByPromotions() {
+        String id = Statement.askQuery( "promotion", "Choisissez une promotion dans laquelle rechercher > " );
+        String query =
+                Statement.join( "*", "eleve", "groupe", "identifiant_groupe=identifiant" ) + Statement.where( EQUAL,
+                        QUOTE, "identifiant_promotion", id );
+        Statement.printQuery( query, "eleves par promotion" );
+    }
+
+    public static void findByGroups() {
+        String id = Statement.askQuery( "groupe", "Choisissez un groupe dans laquelle rechercher > " );
+        String query = Statement.select( "eleve" ) + Statement.where( EQUAL, QUOTE, "identifiant_groupe", id );
+        Statement.printQuery( query, "eleves par groupe" );
     }
 }

@@ -18,16 +18,16 @@ public final class Constants {
             DEF_TABLE_POSSEDE = "possede(numero_epreuve,code_cours)";
 
     /**
-     * Number of columns for tables in DB.
+     * Operator accepted in a where clause.
      */
-    public static final int
-            NBR_COLUMNS_DEFAULT = 1,
-            NBR_COLUMNS_MIN = 3,
-            NBR_COLUMNS_GROUPE = 2,
-            NBR_COLUMNS_ELEVE = 16,
-            NBR_COLUMNS_PROFESSEUR = 9,
-            NBR_COLUMNS_COURS = 9,
-            NBR_COLUMNS_DISPENSE = 2,
-            NBR_COLUMNS_EPREUVE = 4,
-            NBR_COLUMNS_POSSEDE = 2;
+    public static final String
+            EQUAL = "=",
+            DIFFERENT = "!=",
+            NOT_IN = " not in ";
+    /**
+     * Separator accepted in a where clause.
+     */
+    public static final String
+            QUOTE = "''",
+            PARENTHESIS = "()";
 }

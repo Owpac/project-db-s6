@@ -1,9 +1,6 @@
 import app.Database;
-import app.Input;
 import app.Menu;
 import app.Statement;
-import gestion.Cours;
-import gestion.Dispense;
 
 public class Main {
 
@@ -11,7 +8,13 @@ public class Main {
 
         Menu menu = new Menu();
 
-        /*String query = Statement.select( "cours", "code", " NOT IN ", "??" );
+
+        /*String query = Statement.join( "*", "cours", "dispense", "code=code_cours" ) + Statement.where( "matricule_profeseur", "12351" );
         System.out.println( query );*/
+
+/*        new Statement( new Database() );
+        String query = Statement.join( "professeur.nom, cours.nom", "professeur", "dispense", "matricule=matricule_professeur", "cours", "code_cours=code" );
+        System.out.println( query );
+        Statement.printQuery( query, "prof" );*/
     }
 }

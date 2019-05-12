@@ -2,7 +2,8 @@ package app;
 
 import gestion.*;
 
-import static app.Constants.*;
+import static app.Constants.EQUAL;
+import static app.Constants.QUOTE;
 
 public class Menu {
 
@@ -18,6 +19,7 @@ public class Menu {
         new Professeur( database );
         new Eleve( database );
         new Epreuve( database );
+        new Possede( database );
 
         do {
             login();
@@ -42,26 +44,103 @@ public class Menu {
                 break;
 
             case 2:
+                professor();
                 break;
 
             case 3:
+                student();
                 break;
-
-            default:
-                System.out.println();
-                System.out.println( "Votre reponse ne correspond pas aux choix disponibles." );
         }
     }
 
     public void administrator() {
+        do {
+            System.out.println();
+            System.out.println( "0) Quitter." );
+            System.out.println( "1) Gestion." );
+            System.out.println( "2) Recherche." );
+            System.out.println( "3) Affichage." );
+            int answer = Input.askInt( "Action > ", 0, 3 );
+
+            switch (answer) {
+                case 0:
+                    break;
+
+                case 1:
+                    manage();
+                    break;
+
+                case 2:
+                    find();
+                    break;
+
+                case 3:
+                    print();
+                    break;
+            }
+        } while (!isOk( "Se deconnecter ? (oui/non)" ));
+    }
+
+    public void professor() {
+        do {
+            String idProfessor = Statement.askQuery( "professeur", "Quel professeur etes-vous ? " );
+
+            System.out.println();
+            System.out.println( "0) Quitter." );
+            System.out.println( "1) Gestion des epreuves." );
+            System.out.println( "2) Rechercher." );
+            int answer = Input.askInt( "Action > ", 0, 2 );
+
+            switch (answer) {
+                case 0:
+                    break;
+
+                case 1:
+                    manageTest( idProfessor );
+                    break;
+
+                case 2:
+                    find();
+                    break;
+            }
+        } while (!isOk( "Se deconnecter ? (oui/non)" ));
+    }
+
+    public void student() {
+        do {
+            String idStudent = Statement.askQuery( "eleve", "Quel eleve etes-vous ? " );
+
+            System.out.println();
+            System.out.println( "0) Quitter." );
+            System.out.println( "1) Afficher mon releve de notes." );
+            System.out.println( "2) Rechercher." );
+            int answer = Input.askInt( "Action > ", 0, 1 );
+
+            switch (answer) {
+                case 0:
+                    break;
+
+                case 1:
+                    Eleve.printGrades( idStudent );
+                    break;
+
+                case 2:
+                    find();
+                    break;
+            }
+        } while (!isOk( "Se deconnecter ? (oui/non)" ));
+    }
+
+    public void manage() {
         System.out.println();
         System.out.println( "0) Quitter." );
         System.out.println( "1) Gestion des groupes." );
-        System.out.println( "2) Gestion des cours." );
+        System.out.println( "2) Gestion des eleves." );
+        System.out.println( "3) Gestion des cours." );
         System.out.println( "3) Gestion des professeurs." );
-        System.out.println( "4) Gestion des eleves." );
         System.out.println( "5) Gestion des professeurs d'un cours." );
-        int answer = Input.askInt( "Action > ", 0, 5 );
+        System.out.println( "6) Gestion des epreuves." );
+        int answer = Input.askInt( "Action > ", 0, 6 );
 
         switch (answer) {
             case 0:
@@ -72,26 +151,67 @@ public class Menu {
                 break;
 
             case 2:
-                manageClass();
+                manageStudent();
                 break;
 
             case 3:
-                manageProfessor();
+                manageClass();
                 break;
 
             case 4:
-                manageStudent();
+                manageProfessor();
                 break;
 
             case 5:
                 manageProfessorOfClass();
+                break;
+
+            case 6:
+                manageTest();
+                break;
+        }
+    }
+
+    public void find() {
+        System.out.println();
+        System.out.println( "0) Quitter." );
+        System.out.println( "1) Rechercher par promotions." );
+        System.out.println( "2) Rechercher par groupes." );
+        int answer = Input.askInt( "Action > ", 0, 2 );
+
+        switch (answer) {
+            case 0:
+                break;
+
+            case 1:
+                Eleve.findByPromotions();
+                break;
+
+            case 2:
+                Eleve.findByGroups();
+                break;
+        }
+    }
+
+    public void print() {
+        System.out.println();
+        System.out.println( "0) Quitter." );
+        System.out.println( "1) Afficher le relevé de note d'un eleve." );
+        int answer = Input.askInt( "Action > ", 0, 1 );
+
+        switch (answer) {
+            case 0:
+                break;
+
+            case 1:
+                Eleve.printGrades();
                 break;
         }
     }
 
     public void manageGroup() {
         do {
-            Statement.printQuery( "groupe", NBR_COLUMNS_GROUPE );
+            Statement.printQuery( "groupe" );
 
             System.out.println( "0) Quitter." );
             System.out.println( "1) Ajouter un groupe." );
@@ -134,9 +254,47 @@ public class Menu {
         } while (!isOk( "Quitter la gestion des groupes ? (oui/non)" ));
     }
 
+    public void manageStudent() {
+        do {
+            Statement.printQuery( "eleve" );
+
+            System.out.println( "0) Quitter." );
+            System.out.println( "1) Ajouter un eleve." );
+            System.out.println( "2) Modifer un eleve." );
+            System.out.println( "3) Supprimer un eleve." );
+            int answer = Input.askInt( "Que voulez-vous faire > ", 0, 3 );
+
+            switch (answer) {
+                case 0:
+                    break;
+
+                case 1:
+                    do {
+                        Eleve.add();
+                    } while (isOk( "Voulez-vous ajouter un autre eleve ? (oui/non)" ));
+                    break;
+
+                case 2:
+                    do {
+                        Eleve.update();
+                    } while (isOk( "Voulez-vous modifier un autre eleve ? (oui/non)" ));
+                    break;
+
+                case 3:
+                    do {
+                        Eleve.remove();
+                    } while (isOk( "Voulez-vous supprimer un autre eleve ? (oui/non)" ));
+                    break;
+
+                default:
+                    System.out.println( "Votre reponse ne correspond pas aux choix disponibles." );
+            }
+        } while (!isOk( "Quitter la gestion des eleves ? (oui/non)" ));
+    }
+
     public void manageClass() {
         do {
-            Statement.printQuery( "cours", NBR_COLUMNS_COURS );
+            Statement.printQuery( "cours" );
 
             System.out.println( "0) Quitter." );
             System.out.println( "1) Ajouter un cours." );
@@ -174,7 +332,7 @@ public class Menu {
 
     public void manageProfessor() {
         do {
-            Statement.printQuery( "professeur", NBR_COLUMNS_PROFESSEUR );
+            Statement.printQuery( "professeur" );
 
             System.out.println( "0) Quitter." );
             System.out.println( "1) Ajouter un professeur." );
@@ -210,49 +368,11 @@ public class Menu {
         } while (!isOk( "Quitter la gestion des professeurs ? (oui/non)" ));
     }
 
-    public void manageStudent() {
-        do {
-            Statement.printQuery( "eleve", NBR_COLUMNS_ELEVE );
-
-            System.out.println( "0) Quitter." );
-            System.out.println( "1) Ajouter un eleve." );
-            System.out.println( "2) Modifer un eleve." );
-            System.out.println( "3) Supprimer un eleve." );
-            int answer = Input.askInt( "Que voulez-vous faire > ", 0, 3 );
-
-            switch (answer) {
-                case 0:
-                    break;
-
-                case 1:
-                    do {
-                        Eleve.add();
-                    } while (isOk( "Voulez-vous ajouter un autre eleve ? (oui/non)" ));
-                    break;
-
-                case 2:
-                    do {
-                        Eleve.update();
-                    } while (isOk( "Voulez-vous modifier un autre eleve ? (oui/non)" ));
-                    break;
-
-                case 3:
-                    do {
-                        Eleve.remove();
-                    } while (isOk( "Voulez-vous supprimer un autre eleve ? (oui/non)" ));
-                    break;
-
-                default:
-                    System.out.println( "Votre reponse ne correspond pas aux choix disponibles." );
-            }
-        } while (!isOk( "Quitter la gestion des eleves ? (oui/non)" ));
-    }
-
     public void manageProfessorOfClass() {
         do {
-            Statement.printQuery( "professeur", NBR_COLUMNS_MIN );
-            Statement.printQuery( "cours", NBR_COLUMNS_MIN );
-            Statement.printQuery( "dispense", NBR_COLUMNS_DISPENSE );
+            Statement.printQuery( "professeur" );
+            Statement.printQuery( "cours" );
+            Statement.printQuery( "dispense" );
 
             System.out.println( "0) Quitter." );
             System.out.println( "1) Ajouter un professeur a un cours." );
@@ -286,6 +406,87 @@ public class Menu {
                     System.out.println( "Votre reponse ne correspond pas aux choix disponibles." );
             }
         } while (!isOk( "Quitter la gestion des professeurs responsables des cours ? (oui/non)" ));
+    }
+
+    public void manageTest() {
+        do {
+            Statement.printQuery( "epreuve" );
+
+            System.out.println( "0) Quitter." );
+            System.out.println( "1) Ajouter une epreuve." );
+            System.out.println( "2) Modifier une epreuve." );
+            System.out.println( "3) Supprimer une epreuve." );
+            int answer = Input.askInt( "Que voulez-vous faire > ", 0, 3 );
+
+            switch (answer) {
+                case 0:
+                    break;
+
+                case 1:
+                    do {
+                        Epreuve.add();
+                    } while (isOk( "Voulez-vous ajouter une autre epreuve ? (oui/non)" ));
+                    break;
+
+                case 2:
+                    do {
+                        Epreuve.update();
+                    } while (isOk( "Voulez-vous modifier une autre epreuve ? (oui/non)" ));
+                    break;
+
+                case 3:
+                    do {
+                        Epreuve.remove();
+                    } while (isOk( "Voulez-vous supprimer une autre epreuve ? (oui/non)" ));
+                    break;
+
+                default:
+                    System.out.println( "Votre reponse ne correspond pas aux choix disponibles." );
+            }
+        } while (!isOk( "Quitter la gestion des epreuves ? (oui/non)" ));
+    }
+
+    public void manageTest(String idProfessor) {
+        do {
+            String query = Statement.join( "numero, type, note, eleve.prenom, eleve.nom, cours.nom", "epreuve",
+                    "possede", "epreuve.numero=possede.numero_epreuve", "dispense", "possede.code_cours=dispense" +
+                            ".code_cours", "cours", "possede.code_cours = cours.code", "eleve", "epreuve" +
+                            ".matricule_eleve = eleve.matricule" ) + Statement.where( EQUAL, QUOTE,
+                    "matricule_professeur", idProfessor );
+            Statement.printQuery( query, "epreuve" );
+
+            System.out.println( "0) Quitter." );
+            System.out.println( "1) Ajouter une epreuve." );
+            System.out.println( "2) Modifier une epreuve." );
+            System.out.println( "3) Supprimer une epreuve." );
+            int answer = Input.askInt( "Que voulez-vous faire > ", 0, 3 );
+
+            switch (answer) {
+                case 0:
+                    break;
+
+                case 1:
+                    do {
+                        Epreuve.add( idProfessor );
+                    } while (isOk( "Voulez-vous ajouter une autre epreuve ? (oui/non)" ));
+                    break;
+
+                case 2:
+                    do {
+                        Epreuve.update( query );
+                    } while (isOk( "Voulez-vous modifier une autre epreuve ? (oui/non)" ));
+                    break;
+
+                case 3:
+                    do {
+                        Epreuve.remove( idProfessor );
+                    } while (isOk( "Voulez-vous supprimer une autre epreuve ? (oui/non)" ));
+                    break;
+
+                default:
+                    System.out.println( "Votre reponse ne correspond pas aux choix disponibles." );
+            }
+        } while (!isOk( "Quitter la gestion des epreuves ? (oui/non)" ));
     }
 
     public boolean isOk(String message) {

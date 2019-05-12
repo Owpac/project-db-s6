@@ -76,24 +76,15 @@ public class Cours {
 
     public static void add() {
         query();
-        String query = Statement.add( DEF_TABLE_COURS, nom, description, annee, coefficient, pourcentage_de, pourcentage_tp, pourcentage_projet, identifiant_groupe );
+        String query = Statement.add( DEF_TABLE_COURS, nom, description, annee, coefficient, pourcentage_de,
+                pourcentage_tp, pourcentage_projet, identifiant_groupe );
         database.execute( query );
 
-        int id = 0;
-
-        try (java.sql.Statement statement = database.getConnection().createStatement()) {
-            ResultSet result = statement.executeQuery( "select LAST_INSERT_ID()" );
-            result.next();
-            id = result.getInt( 1 );
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        Dispense.add( id );
+        Dispense.add( Statement.lastUpdate() );
     }
 
     public static void update() {
-        String id = Statement.askQuery( "cours", "Choisissez un cours a modifier > ", NBR_COLUMNS_COURS );
+        String id = Statement.askQuery( "cours", "Choisissez un cours a modifier > " );
         System.out.println();
         System.out.println( "0) Annuler." );
         System.out.println( "1) Nom du cours." );
@@ -144,28 +135,33 @@ public class Cours {
 
             case 7:
                 setPourcentage_projet();
-                database.execute( Statement.update( "cours", 1, "pourcentage_projet", pourcentage_projet, "code", id ) );
+                database.execute( Statement.update( "cours", 1, "pourcentage_projet", pourcentage_projet, "code",
+                        id ) );
                 break;
 
             case 8:
                 setIdentifiant_groupe();
-                database.execute( Statement.update( "cours", 1, "identifiant_groupe", identifiant_groupe, "code", id ) );
+                database.execute( Statement.update( "cours", 1, "identifiant_groupe", identifiant_groupe, "code",
+                        id ) );
                 break;
 
             case 9:
                 query();
-                database.execute( Statement.update( "cours", 8, "nom", nom, "description", description, "annee", annee, "coefficient", coefficient, "pourcentage_de", pourcentage_de, "pourcentage_tp", pourcentage_tp, "pourcentage_projet", pourcentage_projet, "identifiant_groupe", identifiant_groupe, "code", id ) );
+                database.execute( Statement.update( "cours", 8, "nom", nom, "description", description, "annee",
+                        annee, "coefficient", coefficient, "pourcentage_de", pourcentage_de, "pourcentage_tp",
+                        pourcentage_tp, "pourcentage_projet", pourcentage_projet, "identifiant_groupe",
+                        identifiant_groupe, "code", id ) );
                 break;
         }
     }
 
-    public static void remove() {
-        String id = Statement.askQuery( "cours", "Choisissez un cours a supprimer > ", NBR_COLUMNS_DISPENSE );
-        String query = Statement.remove( "cours", "code", id );
-        database.execute( query );
+    public static void updateGroup(String idClass, String idNewGroup) {
+        database.execute( Statement.update( "cours", 1, "identifiant_groupe", idNewGroup, "code", idClass ) );
     }
 
-    public static void updateGroup(String idClass, String idNewGroup) {
-        database.execute( Statement.update( "cours", 1, "identifiant_groupe", idNewGroup, "code", idClass) );
+    public static void remove() {
+        String id = Statement.askQuery( "cours", "Choisissez un cours a supprimer > " );
+        String query = Statement.remove( "cours", "code", id );
+        database.execute( query );
     }
 }

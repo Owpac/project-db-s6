@@ -223,6 +223,6 @@ $RECYCLE.BIN/
 
 ### Personnalisation ###
 
-# Driver JDBC
+# Password DB
 
-!mysql-connector-java-8.0.15.jar
+Password.java

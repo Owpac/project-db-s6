@@ -5,7 +5,6 @@ import app.Statement;
 import app.Input;
 
 import static app.Constants.DEF_TABLE_PROFESSEUR;
-import static app.Constants.NBR_COLUMNS_PROFESSEUR;
 
 public class Professeur {
     private static Database database;
@@ -72,12 +71,13 @@ public class Professeur {
 
     public static void add() {
         query();
-        String query = Statement.add( DEF_TABLE_PROFESSEUR, nom, prenom, numero_rue, rue, code_postal, ville, telephone, email );
+        String query = Statement.add( DEF_TABLE_PROFESSEUR, nom, prenom, numero_rue, rue, code_postal, ville,
+                telephone, email );
         database.execute( query );
     }
 
     public static void update() {
-        String id = Statement.askQuery( "professeur", "Choisissez le professeur a modifier > ", NBR_COLUMNS_PROFESSEUR );
+        String id = Statement.askQuery( "professeur", "Choisissez le professeur a modifier > " );
         System.out.println();
         System.out.println( "0) Annuler." );
         System.out.println( "1) Nom du professeur." );
@@ -90,6 +90,7 @@ public class Professeur {
         System.out.println( "8) Email du professeur." );
         System.out.println( "9) Tout." );
         int answer = Input.askInt( "Que voulez-vous modifier > ", 0, 8 );
+        System.out.println();
 
         switch (answer) {
             case 0:
@@ -137,12 +138,15 @@ public class Professeur {
 
             case 9:
                 query();
-                database.execute( Statement.update( "professeur", 8, "nom", nom, "prenom", prenom, "numero_rue", numero_rue, "rue", rue, "code_postal", code_postal, "ville", ville, "telephone", telephone, "email", email, "matricule", id ) );
+                database.execute( Statement.update( "professeur", 8, "nom", nom, "prenom", prenom, "numero_rue",
+                        numero_rue, "rue", rue, "code_postal", code_postal, "ville", ville, "telephone", telephone,
+                        "email", email, "matricule", id ) );
+                break;
         }
     }
 
     public static void remove() {
-        String id = Statement.askQuery( "professeur", "Choisissez un professeur a supprimer > ", NBR_COLUMNS_PROFESSEUR );
+        String id = Statement.askQuery( "professeur", "Choisissez un professeur a supprimer > " );
         String query = Statement.remove( "professeur", "matricule", id );
         database.execute( query );
     }
