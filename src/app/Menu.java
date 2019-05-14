@@ -54,6 +54,7 @@ public class Menu {
     }
 
     public void administrator() {
+        boolean disconnect = false;
         do {
             System.out.println();
             System.out.println( "0) Quitter." );
@@ -64,6 +65,7 @@ public class Menu {
 
             switch (answer) {
                 case 0:
+                    disconnect = isOk( "Se deconnecter ? (oui/non)" );
                     break;
 
                 case 1:
@@ -78,10 +80,11 @@ public class Menu {
                     print();
                     break;
             }
-        } while (!isOk( "Se deconnecter ? (oui/non)" ));
+        } while (!disconnect);
     }
 
     public void professor() {
+        boolean disconnect = false;
         do {
             String idProfessor = Statement.askQuery( "professeur", "Quel professeur etes-vous ? " );
 
@@ -93,6 +96,7 @@ public class Menu {
 
             switch (answer) {
                 case 0:
+                    disconnect = isOk( "Se deconnecter ? (oui/non)" );
                     break;
 
                 case 1:
@@ -103,10 +107,11 @@ public class Menu {
                     find();
                     break;
             }
-        } while (!isOk( "Se deconnecter ? (oui/non)" ));
+        } while (!disconnect);
     }
 
     public void student() {
+        boolean disconnect = false;
         do {
             String idStudent = Statement.askQuery( "eleve", "Quel eleve etes-vous ? " );
 
@@ -118,6 +123,7 @@ public class Menu {
 
             switch (answer) {
                 case 0:
+                    disconnect = isOk( "Se deconnecter ? (oui/non)" );
                     break;
 
                 case 1:
@@ -128,7 +134,7 @@ public class Menu {
                     find();
                     break;
             }
-        } while (!isOk( "Se deconnecter ? (oui/non)" ));
+        } while (!disconnect);
     }
 
     public void manage() {

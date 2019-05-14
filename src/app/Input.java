@@ -31,9 +31,9 @@ public abstract class Input {
             str = sc.nextLine();
 
             if (str.length() < minSize) {
-                System.out.println( "The size of the String you entered is too small, awaiting for at least" + minSize + "characters..." );
+                System.out.println( "La chaîne de caractères entrée est trop petite. Au moins " + minSize + " caractères sont attendus." );
             } else if (str.length() > maxSize) {
-                System.out.println( "The value you entered is too big, awaiting for at most" + maxSize + "characters..." );
+                System.out.println( "La chaîne de caractères entrée est trop grande. Au maximum " + maxSize + " caractères sont acceptés." );
             }
         } while (str.length() < minSize || str.length() > maxSize);
 
@@ -66,7 +66,7 @@ public abstract class Input {
                 value = sc.nextInt();
                 ok = true;
             } catch (Exception ignored) {
-                System.out.println( "Awaiting an integer, please try again..." );
+                System.out.println( "Ceci n'est pas un nombre entier. Veuillez réessayer." );
                 sc.nextLine();  // Escaping the '\n'
             }
         } while (!ok);
@@ -98,9 +98,9 @@ public abstract class Input {
             value = askInt( message );
 
             if (value < min) {
-                System.out.println( "The value you entered is too small, expecting at least " + min + "..." );
+                System.out.println( "La valeur entrée est trop petite. Veuillez entrer une valeur supérieure ou égale à " + min + "." );
             } else if (value > max) {
-                System.out.println( "The value you entered is too big, expecting at most " + max + "..." );
+                System.out.println( "La valeur entrée est trop grande. Veuillez entrer une valeur inférieure ou égale à " + max + "." );
             }
         } while (value < min || value > max);
 
@@ -151,7 +151,7 @@ public abstract class Input {
                 value = sc.nextFloat();
                 ok = true;
             } catch (Exception ignored) {
-                System.out.println( "Awaiting a float, please try again..." );
+                System.out.println( "Un nombre décimal est attendu. Veuillez réessayer." );
                 sc.nextLine();  // Escaping the '\n'
             }
         } while (!ok);
@@ -183,9 +183,9 @@ public abstract class Input {
             value = askFloat( message );
 
             if (value < min) {
-                System.out.println( "The value you entered is too small, expecting at least " + min + "..." );
+                System.out.println( "La valeur entrée est trop petite. Veuillez entrer une valeur supérieure ou égale à " + min + "." );
             } else if (value > max) {
-                System.out.println( "The value you entered is too big, expecting at most " + max + "..." );
+                System.out.println( "La valeur entrée est trop grande. Veuillez entrer une valeur inférieure ou égale à " + max + "." );
             }
         } while (value < min || value > max);
 
@@ -238,7 +238,7 @@ public abstract class Input {
                 value = sc.nextDouble();
                 ok = true;
             } catch (Exception ignored) {
-                System.out.println( "Awaiting a double, please try again..." );
+                System.out.println( "Un nombre décimal est attendu. Veuillez réessayer." );
                 sc.nextLine();  // Escaping the '\n'
             }
         } while (!ok);
@@ -270,9 +270,9 @@ public abstract class Input {
             value = askDouble( message );
 
             if (value < min) {
-                System.out.println( "The value you entered is too small, expecting at least " + min + "..." );
+                System.out.println( "La valeur entrée est trop petite. Veuillez entrer une valeur supérieure ou égale à " + min + "." );
             } else if (value > max) {
-                System.out.println( "The value you entered is too big, expecting at most " + max + "..." );
+                System.out.println( "La valeur entrée est trop grande. Veuillez entrer une valeur inférieure ou égale à " + max + "." );
             }
         } while (value < min || value > max);
 

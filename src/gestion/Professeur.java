@@ -27,35 +27,35 @@ public class Professeur {
     }
 
     private static void setNom() {
-        nom = Input.askString( "Saisissez le nom du professeur > ", 2, 15 );
+        nom = Input.askString( "Saisissez le nom du professeur > ", 2, 50 );
     }
 
     private static void setPrenom() {
-        prenom = Input.askString( "Saisissez le prenom du professeur > ", 2, 15 );
+        prenom = Input.askString( "Saisissez le prenom du professeur > ", 2, 50 );
     }
 
     private static void setNumero_rue() {
-        numero_rue = Input.askString( "Saisissez le numero de rue du professeur > ", 2, 15 );
+        numero_rue = Input.askString( "Saisissez le numero de rue du professeur > ",  1, 50 );
     }
 
     private static void setRue() {
-        rue = Input.askString( "Saisissez la rue du professeur > ", 2, 15 );
+        rue = Input.askString( "Saisissez la rue du professeur > ", 2, 50 );
     }
 
     private static void setCode_postal() {
-        code_postal = Input.askString( "Saisissez le code postal du professeur > ", 2, 15 );
+        code_postal = Input.askString( "Saisissez le code postal du professeur > ", 2, 50 );
     }
 
     private static void setVille() {
-        ville = Input.askString( "Saisissez la ville du professeur > ", 2, 15 );
+        ville = Input.askString( "Saisissez la ville du professeur > ", 2, 50 );
     }
 
     private static void setTelephone() {
-        telephone = Input.askString( "Saisissez le telephone du professeur > ", 2, 15 );
+        telephone = Input.askString( "Saisissez le telephone du professeur > ", 2, 50 );
     }
 
     private static void setEmail() {
-        email = Input.askString( "Saisissez l'email du professeur > ", 2, 15 );
+        email = Input.askString( "Saisissez l'email du professeur > ", 2, 50 );
     }
 
     private static void query() {

@@ -131,6 +131,19 @@ public class Statement {
         return str.toString();
     }
 
+    public static ResultSet executeQuery(String query) {
+        try
+        {
+            java.sql.Statement statement = database.getConnection().createStatement();
+            return statement.executeQuery(query);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * Build an insert statement.
      *
