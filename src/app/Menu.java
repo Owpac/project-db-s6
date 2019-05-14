@@ -91,8 +91,9 @@ public class Menu {
             System.out.println();
             System.out.println( "0) Quitter." );
             System.out.println( "1) Gestion des epreuves." );
-            System.out.println( "2) Rechercher." );
-            int answer = Input.askInt( "Action > ", 0, 2 );
+            System.out.println( "2) Afficher le releve de note d'un eleve." );
+            System.out.println( "3) Rechercher." );
+            int answer = Input.askInt( "Action > ", 0, 3 );
 
             switch (answer) {
                 case 0:
@@ -104,6 +105,10 @@ public class Menu {
                     break;
 
                 case 2:
+                    Professeur.printGrades( idProfessor );
+                    break;
+
+                case 3:
                     find();
                     break;
             }

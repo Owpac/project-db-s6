@@ -4,7 +4,7 @@ import app.Database;
 import app.Statement;
 import app.Input;
 
-import static app.Constants.DEF_TABLE_PROFESSEUR;
+import static app.Constants.*;
 
 public class Professeur {
     private static Database database;
@@ -149,5 +149,16 @@ public class Professeur {
         String id = Statement.askQuery( "professeur", "Choisissez un professeur a supprimer > " );
         String query = Statement.remove( "professeur", "matricule", id );
         database.execute( query );
+    }
+
+    public static void printGrades(String idProfessor) {
+        String query = Statement.join( "eleve.matricule, eleve.nom, eleve.prenom", "eleve", "groupe", "eleve" +
+                ".identifiant_groupe = groupe.identifiant", "cours", "groupe.identifiant=cours.identifiant_groupe",
+                "dispense", "cours.code=dispense.code_cours" ) + Statement.where( EQUAL, QUOTE, "matricule_professeur"
+                , idProfessor );
+
+        String idStudent = Statement.askQuery( query, "eleve", "Choisissez un eleve > " );
+        query = Statement.select( "epreuve" ) + Statement.where( EQUAL, QUOTE, "matricule_eleve", idStudent );
+        Statement.printQuery( query, "note" );
     }
 }
