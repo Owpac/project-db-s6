@@ -148,7 +148,7 @@ public class Menu {
         System.out.println( "1) Gestion des groupes." );
         System.out.println( "2) Gestion des eleves." );
         System.out.println( "3) Gestion des cours." );
-        System.out.println( "3) Gestion des professeurs." );
+        System.out.println( "4) Gestion des professeurs." );
         System.out.println( "5) Gestion des professeurs d'un cours." );
         System.out.println( "6) Gestion des epreuves." );
         int answer = Input.askInt( "Action > ", 0, 6 );
@@ -267,7 +267,12 @@ public class Menu {
 
     public void manageStudent() {
         do {
-            Statement.printQuery( "eleve" );
+            String query = Statement.join( "matricule,eleve.nom,eleve.prenom,date_naissance,ville_naissance," +
+                    "pays_naissance,sexe,eleve.numero_rue,eleve.rue,eleve.code_postal,eleve.ville,eleve" +
+                    ".telephone,eleve.email,eleve.annee,identifiant_groupe,responsable.nom,responsable" + ".prenom",
+                    "eleve", "responsable", "eleve.numero_responsable=responsable.numero" );
+
+            Statement.printQuery( query, "eleve" );
 
             System.out.println( "0) Quitter." );
             System.out.println( "1) Ajouter un eleve." );
@@ -381,9 +386,11 @@ public class Menu {
 
     public void manageProfessorOfClass() {
         do {
-            Statement.printQuery( "professeur" );
-            Statement.printQuery( "cours" );
-            Statement.printQuery( "dispense" );
+            String query = Statement.join( "matricule_professeur, code_cours, professeur.nom, prenom, cours.nom",
+                    "dispense", "cours", "dispense.code_cours = cours.code", "professeur", "dispense" +
+                            ".matricule_professeur = professeur.matricule" );
+
+            Statement.printQuery( query, "dispense" );
 
             System.out.println( "0) Quitter." );
             System.out.println( "1) Ajouter un professeur a un cours." );
@@ -421,7 +428,11 @@ public class Menu {
 
     public void manageTest() {
         do {
-            Statement.printQuery( "epreuve" );
+            String query = Statement.join( "numero, type, note, eleve.prenom, eleve.nom, cours.nom", "epreuve",
+                    "possede", "epreuve.numero=possede.numero_epreuve", "dispense", "possede.code_cours=dispense" +
+                            ".code_cours", "cours", "possede.code_cours = cours.code", "eleve", "epreuve" +
+                            ".matricule_eleve = eleve.matricule" );
+            Statement.printQuery( query, "epreuve" );
 
             System.out.println( "0) Quitter." );
             System.out.println( "1) Ajouter une epreuve." );
