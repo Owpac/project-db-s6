@@ -118,7 +118,11 @@ public class Menu {
     public void student() {
         boolean disconnect = false;
         do {
-            String idStudent = Statement.askQuery( "eleve", "Quel eleve etes-vous ? " );
+            String query = Statement.join( "matricule,eleve.nom,eleve.prenom,date_naissance,ville_naissance," +
+                    "pays_naissance,sexe,eleve.numero_rue,eleve.rue,eleve.code_postal,eleve.ville,eleve" +
+                    ".telephone,eleve.email,eleve.annee,identifiant_groupe,responsable.nom,responsable" + ".prenom",
+                    "eleve", "responsable", "eleve.numero_responsable=responsable.numero" );
+            String idStudent = Statement.askQuery( query, "eleve", "Quel eleve etes-vous ? " );
 
             System.out.println();
             System.out.println( "0) Quitter." );
