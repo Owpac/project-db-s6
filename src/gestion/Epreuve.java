@@ -190,15 +190,20 @@ public class Epreuve {
     }
 
     public static void remove() {
-        String id = Statement.askQuery( "epreuve", "Choisissez une epreuve a supprimer > " );
-        String query = Statement.remove( "epreuve", "numero", id );
+        String query = Statement.join( "numero, type, note, eleve.prenom, eleve.nom, cours.nom", "epreuve",
+                                       "possede", "epreuve.numero=possede.numero_epreuve", "cours", "possede.code_cours = cours.code",
+                                       "eleve", "epreuve .matricule_eleve = eleve.matricule ORDER BY eleve.matricule, cours.code" );
+        String id = Statement.askQuery( query, "epreuve", "Choisissez une epreuve a supprimer > " );
+        query = Statement.remove( "epreuve", "numero", id );
         database.execute( query );
     }
 
     public static void remove(String idProfessor) {
-        String query = Statement.join( "*", "epreuve", "possede", "epreuve.numero = possede.numero_epreuve",
-                "dispense", "possede.code_cours = dispense.code_cours" ) + Statement.where( EQUAL, QUOTE,
-                "matricule_professeur", idProfessor );
+        String query = Statement.join( "numero, type, note, eleve.prenom, eleve.nom, cours.nom", "epreuve",
+                                       "possede", "epreuve.numero=possede.numero_epreuve", "dispense", "possede.code_cours=dispense" +
+                                           ".code_cours", "cours", "possede.code_cours = cours.code", "eleve", "epreuve" +
+                                           ".matricule_eleve = eleve.matricule" ) + Statement.where( EQUAL, QUOTE,
+                                                                                                     "matricule_professeur", idProfessor )  + " ORDER BY eleve.matricule, cours.code";
         String id = Statement.askQuery( query, "epreuve", "Choisissez une epreuve a supprimer > " );
         query = Statement.remove( "epreuve", "numero", id );
         database.execute( query );

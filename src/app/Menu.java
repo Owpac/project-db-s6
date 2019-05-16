@@ -477,7 +477,7 @@ public class Menu {
                     "possede", "epreuve.numero=possede.numero_epreuve", "dispense", "possede.code_cours=dispense" +
                             ".code_cours", "cours", "possede.code_cours = cours.code", "eleve", "epreuve" +
                             ".matricule_eleve = eleve.matricule" ) + Statement.where( EQUAL, QUOTE,
-                    "matricule_professeur", idProfessor );
+                    "matricule_professeur", idProfessor )  + " ORDER BY eleve.matricule, cours.code";
             Statement.printQuery( query, "epreuve" );
 
             System.out.println( "0) Quitter." );
