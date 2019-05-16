@@ -1,3 +1,4 @@
+/* Florian ERNST - Thomas FAUGIER */
 package app;
 
 import javax.swing.*;

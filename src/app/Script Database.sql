@@ -1,3 +1,5 @@
+/* Florian ERNST - Thomas FAUGIER */
+
 create table professeur
 (
     matricule   int auto_increment
@@ -9,7 +11,7 @@ create table professeur
     code_postal varchar(50) not null,
     ville       varchar(50) not null,
     telephone   varchar(50) not null,
-    email       varchar(50) not null
+    email       varchar(50) not null unique
 );
 
 create table promotion
@@ -67,7 +69,7 @@ create table responsable
     code_postal varchar(50) not null,
     ville       varchar(50) not null,
     telephone   varchar(50) not null,
-    email       varchar(50) not null
+    email       varchar(50) not null unique
 );
 
 create table eleve

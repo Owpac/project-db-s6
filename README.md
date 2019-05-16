@@ -1,3 +1,5 @@
+/* Florian ERNST - Thomas FAUGIER */
+
 # Data Base Project
 
 Little school project with MySQL, Java and JDBC.

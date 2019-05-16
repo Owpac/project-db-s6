@@ -1,3 +1,4 @@
+/* Florian ERNST - Thomas FAUGIER */
 package gestion;
 
 import app.Database;
