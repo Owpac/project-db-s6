@@ -53,9 +53,9 @@ public class Epreuve {
     }
 
     private static void query() {
+        setMatricule_eleve();
         setType();
         setNote();
-        setMatricule_eleve();
     }
 
     public static void add() {
