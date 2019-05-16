@@ -158,7 +158,6 @@ public class Professeur {
                 , idProfessor );
 
         String idStudent = Statement.askQuery( query, "eleve", "Choisissez un eleve > " );
-        query = Statement.select( "epreuve" ) + Statement.where( EQUAL, QUOTE, "matricule_eleve", idStudent );
-        Statement.printQuery( query, "note" );
+        Eleve.printGrades(idStudent);
     }
 }

@@ -365,9 +365,9 @@ public class Eleve
             }
         }
 
-        String[] nomsColonnes = {"Matière", "Moyenne"};
+        String[] nomsColonnes = {"Matière", "Coefficient", "Moyenne"};
         int nombreLignes = nomsCours.size() + 1;
-        Object[][] data = new Object[nombreLignes][2];
+        Object[][] data = new Object[nombreLignes][3];
 
         // On calcule les moyennes par matières, et la moyenne générale
         double totalMoyennes = 0;
@@ -380,14 +380,14 @@ public class Eleve
             Double sommeCoeffsMatiere = sommesCoeffs.get(idCours);
 
             double moyenne = totalNotesMatiere / sommeCoeffsMatiere;
-            data[ligne] = new Object[]{nomCours, moyenne};
+            double coeffCours = coefficients.get(idCours)[indexs.indexOf("Cours")];
+            data[ligne] = new Object[]{nomCours, coeffCours, moyenne};
             ligne++;
 
-            double coeffCours = coefficients.get(idCours)[indexs.indexOf("Cours")];
             totalMoyennes += moyenne * coeffCours;
             totalCoeffsCours += coeffCours;
         }
-        data[data.length - 1] = new Object[]{"Moyenne Générale :", totalMoyennes / totalCoeffsCours};
+        data[data.length - 1] = new Object[]{"Moyenne Générale :", "", totalMoyennes / totalCoeffsCours};
         var table = new JTableBasic("Bulletin de notes de l'étudiant " + studentId, data, nomsColonnes);
         table.pack();
         table.setVisible(true);
