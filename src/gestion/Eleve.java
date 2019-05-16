@@ -122,7 +122,7 @@ public class Eleve
 
     public static void setAnnee()
     {
-        annee = Input.askInt("Saisissez l'année de l'élève", 4, 4);
+        annee = Input.askInt("Saisissez l'année de l'élève", 2000, 2050);
         setMatricule();
     }
 
@@ -160,6 +160,7 @@ public class Eleve
         setEmail();
         setIdentifiant_groupe();
         setNumero_responsable();
+        setAnnee();
     }
 
     public static void add()
@@ -189,7 +190,7 @@ public class Eleve
         System.out.println("12) Email de l'eleve.");
         System.out.println("13) Le groupe de l'eleve.");
         System.out.println("14) Le responsable de l'eleve.");
-        System.out.println("50) Tout.");
+        System.out.println("15) Tout.");
         int answer = Input.askInt("Que voulez-vous modifier > ", 0, 50);
         System.out.println();
 

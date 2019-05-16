@@ -23,7 +23,6 @@ public class JTableBasic extends JFrame
     {
         super();
         setTitle(title);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.data = data;
         this.headers = headers;
     }
