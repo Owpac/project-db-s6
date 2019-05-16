@@ -4,6 +4,13 @@ import app.Database;
 import app.Input;
 import app.Statement;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 import static app.Constants.*;
 
 
@@ -44,6 +51,36 @@ public class Epreuve {
         }
     }
 
+    private static boolean setType(String code_cours)
+    {
+        List<String> topics = new LinkedList<>(Arrays.asList("DE", "TP", "Projet"));
+        String query = Statement.join("*", "epreuve e", "possede p", "e.numero = p.numero_epreuve") + Statement.where(EQUAL, QUOTE, "matricule_eleve", matricule_eleve, "code_cours", code_cours);
+        ResultSet rset = Statement.executeQuery(query);
+
+        while (true) {
+            try {
+                if (!rset.next()) break;
+                String type = rset.getString("type");
+                topics.remove(type);
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (topics.size() == 0) {
+            return false;
+        }
+
+        for (int i = 0; i < topics.size(); i++) {
+            String topic = topics.get(i);
+            System.out.println(i+1 + ") " + topic + ".");
+        }
+        int answer = Input.askInt( "Choisissez le type de l'epreuve > ", 1, topics.size() );
+        type = topics.get(answer - 1);
+        return true;
+    }
+
     public static void setNote() {
         note = Input.askInt( "Saisissez la note > ", 0, 20 );
     }
@@ -58,20 +95,44 @@ public class Epreuve {
         setNote();
     }
 
+    private static boolean queryWithCodeCours(String codeCours) {
+        setMatricule_eleve();
+        return queryWithCodeCoursAndEleve(codeCours);
+    }
+
+    private static boolean queryWithCodeCoursAndEleve(String codeCours) {
+        if (!setType(codeCours)) {
+            return false;
+        }
+        setNote();
+        return true;
+    }
+
     public static void add() {
-        query();
+        setMatricule_eleve();
+        Possede.setCode_coursMatricule(matricule_eleve);
+
+        if (!queryWithCodeCoursAndEleve(Possede.getCode_cours())) {
+            System.out.println("L'élève a déjà passé toutes les épreuves possibles dans cette matière. Impossible d'en rajouter plus.");
+            return;
+        }
         String query = Statement.add( DEF_TABLE_EPREUVE, type, note, matricule_eleve );
         database.execute( query );
 
-        Possede.add( Statement.lastUpdate() );
+        Possede.addWithoutSetCours( Statement.lastUpdate() );
     }
 
     public static void add(String idProfessor) {
-        query();
+        Possede.setCode_cours( idProfessor );
+
+        if (!queryWithCodeCours(Possede.getCode_cours())) {
+            System.out.println("L'élève a déjà passé toutes les épreuves possibles dans cette matière. Impossible d'en rajouter plus.");
+            return;
+        }
         String query = Statement.add( DEF_TABLE_EPREUVE, type, note, matricule_eleve );
         database.execute( query );
 
-        Possede.add( Statement.lastUpdate(), idProfessor );
+        Possede.addWithoutSetCours( Statement.lastUpdate());
     }
 
     public static void update() {

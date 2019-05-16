@@ -128,7 +128,7 @@ public class Menu {
             System.out.println( "0) Quitter." );
             System.out.println( "1) Afficher mon releve de notes." );
             System.out.println( "2) Rechercher." );
-            int answer = Input.askInt( "Action > ", 0, 1 );
+            int answer = Input.askInt( "Action > ", 0, 2 );
 
             switch (answer) {
                 case 0:
@@ -433,9 +433,8 @@ public class Menu {
     public void manageTest() {
         do {
             String query = Statement.join( "numero, type, note, eleve.prenom, eleve.nom, cours.nom", "epreuve",
-                    "possede", "epreuve.numero=possede.numero_epreuve", "dispense", "possede.code_cours=dispense" +
-                            ".code_cours", "cours", "possede.code_cours = cours.code", "eleve", "epreuve" +
-                            ".matricule_eleve = eleve.matricule" );
+                    "possede", "epreuve.numero=possede.numero_epreuve", "cours", "possede.code_cours = cours.code",
+                             "eleve", "epreuve .matricule_eleve = eleve.matricule ORDER BY eleve.matricule, cours.code" );
             Statement.printQuery( query, "epreuve" );
 
             System.out.println( "0) Quitter." );
